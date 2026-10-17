@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="แผนที่ 3 มิติ เครือข่ายปรึกษาทันตกรรม จังหวัดชัยภูมิ">
+<style>:root{color-scheme:light}body{margin:0;font-size:14px}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Dental Consult Twin ชัยภูมิ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: left rail = filters & numbers, right = 3D province twin on a bright paper-white ground. Single deliberate light look. */
+:root{
+  --bg:#f3f6f9; --panel:#ffffff; --panel-2:#eef3f8; --line:#d8e1ea;
+  --fg:#18283a; --muted:#566b81; --faint:#8396ab;
+  --hub:#b47a0c; --hub-soft:#fbefd4; --spoke:#2f6fb0; --accent:#1d5fa3; --danger:#cf3f2a; --ok:#2a9653;
+  --f-display:"Bai Jamjuree","IBM Plex Sans Thai",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans Thai",system-ui,sans-serif;
+  --f-data:"IBM Plex Mono",ui-monospace,monospace;
+  color-scheme:light;
+}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:14px;line-height:1.5}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+.nw{white-space:nowrap}
+button{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible{outline:2px solid var(--hub);outline-offset:2px}
+.app{display:grid;grid-template-columns:minmax(320px,370px) 1fr;height:100%}
+.rail>*{flex-shrink:0}
+.rail{background:var(--panel);border-right:1px solid var(--line);overflow-y:auto;padding:20px 18px 24px;display:flex;flex-direction:column;gap:20px;min-width:0}
+.eyebrow{font-size:11.5px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+h1{font-family:var(--f-display);font-weight:700;font-size:23px;line-height:1.2;margin:4px 0 0;text-wrap:balance}
+h2{font-family:var(--f-display);font-weight:600;font-size:13px;letter-spacing:.04em;color:var(--muted);margin:0 0 8px}
+.src{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}
+.chip-src{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 9px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line)}
+.chip-src i{width:7px;height:7px;border-radius:50%;background:var(--hub);display:block}
+.chip-src.file i{background:var(--ok)}
+.btn{background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:5px 10px;font-size:12.5px;cursor:pointer}
+.btn:hover{border-color:var(--spoke)}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.kpi{background:var(--panel);padding:10px 12px}
+.kpi b{display:block;font-family:var(--f-data);font-size:22px;font-weight:500;font-variant-numeric:tabular-nums;line-height:1.2}
+.kpi span{font-size:12px;color:var(--muted)}
+.kpi.warn b{color:var(--danger)}
+.seg{display:flex;flex-wrap:wrap;gap:4px}
+.seg button{background:transparent;border:1px solid var(--line);border-radius:6px;padding:4px 10px;font-size:12.5px;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--panel-2);color:var(--fg);border-color:var(--spoke)}
+.filters{display:flex;flex-direction:column;gap:14px}
+.specs{display:flex;flex-direction:column;gap:2px}
+.spec{display:grid;grid-template-columns:14px 1fr auto;align-items:center;gap:9px;padding:5px 8px;border-radius:6px;border:1px solid transparent;background:transparent;cursor:pointer;text-align:left;font-size:13px}
+.spec:hover{background:var(--panel-2)}
+.spec .sw{width:12px;height:12px;border-radius:3px}
+.spec .n{font-family:var(--f-data);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.spec:not(.st)[aria-pressed="false"]{opacity:.38}
+.spec:not(.st)[aria-pressed="false"] .sw{background:transparent!important;border:1.5px solid var(--faint)}
+.row-h{display:flex;justify-content:space-between;align-items:baseline}
+.link{background:none;border:0;color:var(--spoke);font-size:12px;cursor:pointer;padding:0}
+.rank{display:flex;flex-direction:column;gap:2px}
+.rk{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:6px 8px;border-radius:6px;cursor:pointer;background:none;border:0;text-align:left}
+.rk:hover{background:var(--panel-2)}
+.rk .nm{font-size:13px}
+.rk .ct{font-family:var(--f-data);font-size:12px;font-variant-numeric:tabular-nums;color:var(--muted)}
+.rk .bar{grid-column:1/-1;height:4px;background:var(--panel-2);border-radius:2px;overflow:hidden;display:flex}
+.rk .bar i{display:block;height:100%}
+.pend{color:var(--danger)}
+.foot{font-size:11.5px;color:var(--faint);line-height:1.55;margin-top:auto}
+.mapwrap{position:relative;min-width:0;overflow:hidden;background:radial-gradient(ellipse at 50% 38%,#ffffff 0%,#e6eef5 75%)}
+#map{position:absolute;inset:0}
+#labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+#labels .lbl{pointer-events:auto;cursor:pointer}
+.lbl .node{font-family:var(--f-data);font-size:9.5px;font-weight:500;letter-spacing:.04em;margin-left:5px;padding:0 4px;border-radius:3px;background:#b47a0c;color:#fff;vertical-align:1px}
+.lbl.sel .node{background:#fff;color:var(--accent)}
+.lbl{position:absolute;transform:translate(-50%,2px);white-space:nowrap;font-size:10.5px;line-height:1.45;padding:0 5px;border-radius:4px;background:rgba(255,255,255,.82);color:var(--fg);border:1px solid rgba(24,40,58,.12)}
+.lbl.hub{font-weight:600;border-color:#e7c77f}
+.lbl.sel{background:var(--accent);color:#fff;border-color:var(--accent)}
+.lbl .cnt{font-family:var(--f-data);font-size:11px;margin-left:6px;opacity:.85}
+.lbl .cnt.in{color:#7a5206;opacity:1}
+.lbl.sel .cnt.in{color:#fff}
+.lbl .pd{font-size:10.5px;margin-left:6px;padding:0 5px;border-radius:3px;background:#fde4df;color:var(--danger)}
+.lbl.sel .pd{background:#fff;color:var(--danger)}
+.ctrl{position:absolute;top:12px;left:12px;display:flex;flex-wrap:wrap;gap:6px;max-width:calc(100% - 24px)}
+.ctrl .btn{background:rgba(255,255,255,.94);box-shadow:0 1px 3px rgba(24,40,58,.1)}
+.ctrl .btn[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.badge-mock{position:absolute;top:12px;right:12px;font-size:11.5px;padding:3px 9px;border-radius:999px;border:1px dashed var(--hub);color:#7a5206;background:var(--hub-soft)}
+.legend{position:absolute;left:12px;bottom:12px;background:rgba(255,255,255,.94);box-shadow:0 1px 3px rgba(24,40,58,.1);border:1px solid var(--line);border-radius:8px;padding:8px 11px;font-size:11.5px;color:var(--muted);display:flex;flex-direction:column;gap:3px;max-width:calc(100% - 24px)}
+.elev{display:flex;flex-direction:column;gap:3px;width:230px;max-width:100%;padding-bottom:6px;margin-bottom:3px;border-bottom:1px solid var(--line)}
+.elev i{display:block;height:8px;border-radius:2px;background:linear-gradient(90deg,#4880cc 0%,#5cb8d6 6%,#76cca0 10%,#b2dc70 16%,#eeda68 23%,#f0a854 35%,#dc6848 50%,#b0403a 71%,#8c3434 100%)}
+.elev div{position:relative;height:13px;font-family:var(--f-data);font-size:10px}
+.elev div b{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.elev div b:first-child{transform:none}
+.elev div b:last-child{transform:translateX(-80%)}
+.elev b{font-weight:500}
+.legend details{display:flex;flex-direction:column;gap:3px}
+.legend summary{cursor:pointer;color:var(--fg);font-size:11.5px}
+.legend details[open] summary{margin-bottom:3px}
+.legend details span{margin-top:3px}
+.legend .sw3{width:12px;height:12px;border-radius:2px;display:inline-block}
+.legend .nodechip{font-family:var(--f-data);font-size:9.5px;font-weight:500;padding:0 4px;border-radius:3px;background:#b47a0c;color:#fff}
+.legend span{display:flex;align-items:center;gap:7px}
+.legend i{display:inline-block;flex:none}
+.detail{position:absolute;top:56px;right:12px;width:310px;max-width:calc(100% - 24px);max-height:calc(100% - 68px);overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 14px 12px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 30px rgba(24,40,58,.16)}
+.detail h3{font-family:var(--f-display);font-size:17px;margin:0;line-height:1.25}
+.role{font-size:11px;padding:1px 7px;border-radius:999px;border:1px solid var(--spoke);color:var(--spoke);margin-left:6px;vertical-align:2px}
+.role.hub{border-color:var(--hub);color:var(--hub)}
+.dstat{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.dstat div{background:var(--panel-2);border-radius:7px;padding:6px 8px}
+.dstat b{display:block;font-family:var(--f-data);font-weight:500;font-size:17px;font-variant-numeric:tabular-nums}
+.dstat span{font-size:11px;color:var(--muted)}
+.sbar{display:grid;grid-template-columns:118px 1fr 30px;align-items:center;gap:8px;font-size:12px}
+.sbar .t{height:8px;background:var(--panel-2);border-radius:3px;overflow:hidden}
+.sbar .t i{display:block;height:100%;border-radius:3px}
+.sbar .v{font-family:var(--f-data);text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.wl{display:flex;flex-direction:column;gap:5px;font-size:12px}
+.wl div{display:grid;grid-template-columns:8px 1fr auto;gap:8px;align-items:center}
+.wl i{width:8px;height:8px;border-radius:50%}
+.stk{display:flex;height:10px;border-radius:3px;overflow:hidden;background:var(--panel-2)}
+.stk i{display:block;height:100%}
+.stl{display:flex;flex-wrap:wrap;gap:3px 12px;margin-top:6px;font-size:11.5px;color:var(--muted)}
+.stl span{display:inline-flex;align-items:center;gap:5px}
+.stl i{width:8px;height:8px;border-radius:2px;display:inline-block}
+.stl b{color:var(--fg);font-family:var(--f-data);font-weight:500}
+.rolerow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:4px;font-size:12px;color:var(--muted)}
+.rolerow .role{margin-left:0}
+.spec .sw.ring{background:transparent;border:2px solid var(--danger)}
+.spec.st[aria-pressed="true"]{background:var(--panel-2);border-color:var(--spoke)}
+.lbl.office{background:#e9f1ee;border-color:#b9d0c6;color:#2d5546}
+.snap{font-size:12px;color:var(--muted);margin-top:8px}
+.empty{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(420px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(24,40,58,.14);display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.empty h3{font-family:var(--f-display);font-size:18px;margin:0}
+.empty p{margin:0;color:var(--muted);font-size:13px}
+.rk .nh{font-size:10.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:0 6px;margin-left:4px}
+.x{position:absolute;top:8px;right:8px;background:none;border:0;color:var(--muted);font-size:18px;cursor:pointer;line-height:1;padding:4px 6px}
+.toast{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);background:var(--panel);box-shadow:0 4px 14px rgba(24,40,58,.15);border:1px solid var(--line);border-left:3px solid var(--hub);padding:7px 12px;border-radius:7px;font-size:12.5px;max-width:calc(100% - 24px)}
+.deck-tooltip{font-family:var(--f-body)!important}
+.modal{position:fixed;inset:0;background:rgba(24,40,58,.4);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+.modal .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;max-width:640px;width:100%;max-height:90%;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
+.modal h3{font-family:var(--f-display);margin:0;font-size:18px}
+.modal pre{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;font-family:var(--f-data);font-size:12px;overflow-x:auto;margin:0;white-space:pre}
+.modal table{border-collapse:collapse;font-size:12.5px;width:100%}
+.modal td{border-top:1px solid var(--line);padding:5px 6px;vertical-align:top}
+.modal td:first-child{font-family:var(--f-data);white-space:nowrap;color:var(--hub)}
+.modal .acts{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+@media (max-width:760px){
+  html,body{height:auto}
+  .app{grid-template-columns:1fr;height:auto}
+  .mapwrap{height:64vh;min-height:380px;order:-1}
+  .rail{border-right:0;border-top:1px solid var(--line)}
+  .detail{top:auto;bottom:0;right:0;left:0;width:auto;max-width:none;max-height:58%;border-radius:12px 12px 0 0}
+  .legend{display:none}
+  .badge-mock{top:auto;bottom:12px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <header>
+      <div class="eyebrow">สสจ.ชัยภูมิ · เครือข่ายบริการทันตกรรม</div>
+      <h1><span class="nw">เครือข่ายปรึกษา</span><span class="nw">ทันตกรรม</span> <span class="nw">จังหวัดชัยภูมิ</span></h1>
+      <div class="src">
+        <span class="chip-src" id="srcChip"><i></i><span id="srcText">ยังไม่มีข้อมูล</span></span>
+        <button class="btn primary" id="btnImport">นำเข้า CSV</button>
+        <button class="btn" id="btnSchema">รูปแบบไฟล์</button>
+        <button class="btn" id="btnClear" hidden>ล้างข้อมูล</button>
+        <input type="file" id="fileIn" accept=".csv,text/csv" hidden>
+      </div>
+      <div class="snap" id="snapNote" hidden></div>
+    </header>
+
+    <section class="kpis" aria-label="สรุป">
+      <div class="kpi"><b id="kTotal">0</b><span>case ทั้งหมด</span></div>
+      <div class="kpi warn"><b id="kOpen">0</b><span>ยังดำเนินการอยู่</span></div>
+      <div class="kpi"><b id="kMed">–</b><span>ส่งจนจบเรื่อง (มัธยฐาน)</span></div>
+      <div class="kpi"><b id="kRef">–</b><span>เป็น Refer / ดูแลร่วม</span></div>
+    </section>
+
+    <section class="filters">
+      <div><h2>ช่วงเวลา</h2><div class="seg" id="fRange"></div></div>
+      <div><h2>ปลายทาง</h2><div class="seg" id="fHub"></div></div>
+      <div><h2>ประเภทงาน</h2><div class="seg" id="fWf"></div></div>
+      <div>
+        <div class="row-h"><h2>สถานะ</h2><button class="link" id="stAll" hidden>ดูทุกสถานะ</button></div>
+        <div class="specs" id="fStatus"></div>
+      </div>
+      <div>
+        <div class="row-h"><h2>สาขาทันตกรรม</h2><button class="link" id="specAll">เลือกทั้งหมด</button></div>
+        <div class="specs" id="fSpec"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>ต้นทางที่ส่งมากที่สุด</h2>
+      <div class="rank" id="rank"></div>
+    </section>
+    <section>
+      <h2>ปลายทางที่รับปรึกษามากที่สุด</h2>
+      <div class="rank" id="rankIn"></div>
+    </section>
+
+    <p class="foot">นับ case ตามรหัส case ไม่ซ้ำ ส่วนเส้นบนแผนที่นับแถวละหนึ่งสาขา (case เดียวที่ปรึกษาหลายสาขาจะมีหลายเส้น) ประเภทโรงพยาบาลและแม่ข่าย (Node) ตามทะเบียน hoscpho พิกัดโรงพยาบาลจาก OpenStreetMap (ซับใหญ่ หนองบัวระเหว เกษตรสมบูรณ์ เทพสถิต ใช้ที่ตั้งตัวอำเภอ ส่วน สสจ. วางเยื้องจากตัวเมืองเพื่อไม่ให้ทับ รพศ.) ขอบเขตอำเภอจาก OpenGISData-Thailand ภาพภูมิประเทศสร้างจากข้อมูลความสูง AWS Terrain Tiles (SRTM และแหล่งเปิดอื่น) ความละเอียดราว 500 ม.</p>
+  </aside>
+
+  <main class="mapwrap" id="mapwrap">
+    <div id="map"></div>
+    <div id="labels"></div>
+    <div class="ctrl">
+      <button class="btn" id="btn3d" aria-pressed="true">มุม 3 มิติ</button>
+      <button class="btn" id="btnReset">รีเซ็ตมุมมอง</button>
+      <button class="btn" id="btnTerrain" aria-pressed="true">ภูมิประเทศ</button>
+    </div>
+    <div class="empty" id="emptyState"><h3>ยังไม่มีข้อมูลการปรึกษา</h3><p>นำเข้าไฟล์ .csv ที่ export จาก CPH Consult เพื่อแสดงเส้นปรึกษาบนแผนที่ ไฟล์อ่านและจำไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น เปิดหน้านี้ครั้งต่อไปข้อมูลล่าสุดจะแสดงทันที</p><button class="btn primary" id="btnImport2">นำเข้า CSV</button></div>
+    <div class="legend">
+      <div class="elev" id="elevKey"><span>ความสูงจากระดับน้ำทะเล</span><i></i><div><b style="left:0">100</b><b style="left:16.7%">300</b><b style="left:41.7%">600</b><b style="left:91.7%">1,200 ม.</b></div></div>
+      <details id="legMore"><summary>คำอธิบายสัญลักษณ์</summary>
+      <span><i class="sw3" style="background:#e87058"></i>รพ.ศูนย์ (ใหญ่สุด)</span>
+      <span><i class="sw3" style="background:#5694d4"></i>รพ.ทั่วไป</span>
+      <span><i class="sw3" style="background:#f8f9fb;border:1px solid var(--faint)"></i>รพ.ชุมชน</span>
+      <span><b class="nodechip">Node</b>โรงพยาบาลแม่ข่าย</span>
+      <span><b style="font-family:var(--f-data);font-weight:500;color:var(--fg)">↑6</b>ส่งปรึกษาออก 6 รายการ</span>
+      <span><b style="font-family:var(--f-data);font-weight:500;color:#7a5206">↓27</b>รับปรึกษาเข้า 27 รายการ</span>
+      <span><i style="width:16px;height:10px;border-radius:3px;background:#fde4df"></i>ตัวเลขสีแดง = ยังดำเนินการอยู่ (ชี้เมาส์ที่ป้ายเพื่อดูคำอธิบาย)</span>
+      <span><i style="width:12px;height:8px;background:#fff;border:1px solid var(--faint);border-radius:1px"></i>ตึกขยายเกินจริงเมื่อซูมออก ซูมเข้าเพื่อดูใกล้ขนาดจริง</span>
+      <span><i style="width:18px;height:3px;background:linear-gradient(90deg,#e4523e,#1c8ad4,#2e9e52)"></i>เส้นปรึกษา สีตามสาขา หนาตามจำนวน</span>
+      <span><i style="width:8px;height:8px;border-radius:50%;background:#e4523e;border:1.5px solid #fff;box-shadow:0 0 0 1px #c9d3dd"></i>จุดวิ่ง = case ที่ยังไม่จบ</span>
+      </details>
+    </div>
+    <aside class="detail" id="detail" hidden></aside>
+    <div class="toast" id="toast" hidden></div>
+  </main>
+</div>
+
+<div class="modal" id="modal" hidden>
+  <div class="card" role="dialog" aria-labelledby="mTitle">
+    <h3 id="mTitle">ไฟล์ที่นำเข้าได้</h3>
+    <p style="margin:0;color:var(--muted)">ไฟล์อ่านในเบราว์เซอร์ของผู้เปิดเท่านั้น ไม่ถูกอัปโหลดไปที่ใด หน้านี้จำไฟล์ล่าสุดไว้ในเบราว์เซอร์เครื่องนี้ กด "ล้างข้อมูล" เพื่อลบ</p>
+    <div><h2 style="margin-bottom:4px">1. ไฟล์ export จาก CPH Consult (แนะนำ)</h2>
+    <p style="margin:0">เลือกไฟล์ .csv ที่ส่งออกจากหน้า Digital Twin ของ CPH Consult ได้ทันที ระบบอ่านคอลัมน์เหล่านี้</p></div>
+    <table>
+      <tr><td>case_id</td><td>รหัส case ใช้นับจำนวน case ไม่ซ้ำ</td></tr>
+      <tr><td>origin_hospital_name / _level</td><td>ต้นทาง และระดับ (รพช. / รพ.node / รพศ. / สสจ.) ใช้กำหนดว่าเป็นแม่ข่ายหรือลูกข่าย</td></tr>
+      <tr><td>destination_hospital_name / _level</td><td>ปลายทาง</td></tr>
+      <tr><td>specialty</td><td>สาขาทันตกรรม หนึ่งแถวต่อหนึ่งสาขา</td></tr>
+      <tr><td>workflow_type</td><td>consult / refer / shared_care</td></tr>
+      <tr><td>status_bucket, status_label_th</td><td>กลุ่มสถานะและชื่อภาษาไทย ถ้ามีสถานะใหม่จะแสดงตามชื่อในไฟล์</td></tr>
+      <tr><td>sent_at, last_activity_at</td><td>เวลาส่ง และเวลากิจกรรมล่าสุด (UTC)</td></tr>
+      <tr><td>snapshot_at</td><td>เวลาที่ export ใช้คำนวณอายุ case</td></tr>
+    </table>
+    <div><h2 style="margin-bottom:4px">2. ไฟล์ CSV ทั่วไป</h2>
+    <p style="margin:0">ใช้คอลัมน์ consult_id, from_hosp, to_hosp, specialty, status, created_at, responded_at</p></div>
+    <pre id="tpl">consult_id,from_hosp,to_hosp,specialty,status,created_at,responded_at
+C0001,รพ.คอนสาร,รพ.ภูเขียว,ศัลยศาสตร์ช่องปากและแม็กซิลโลเฟเชียล,ตอบแล้ว,2026-10-14 09:10,2026-10-14 13:45
+C0002,รพ.เทพสถิต,รพศ.ชัยภูมิ,ทันตกรรมจัดฟัน,รอตอบ,2026-10-16 10:20,</pre>
+    <div class="acts">
+      <button class="btn" id="btnCopy">คัดลอกตัวอย่าง</button>
+      <button class="btn primary" id="btnClose">ปิด</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/deck.gl@8.9.35/dist.min.js"></script>
+<script type="application/json" id="districts">{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"code":"3615","name":"เนินสง่า","en":"Noen Sa-nga","cx":102.0114,"cy":15.5908},"geometry":{"type":"MultiPolygon","coordinates":[[[[102.0727,15.6073],[102.0395,15.5425],[102.0368,15.5016],[102.0356,15.4795],[102.0095,15.4582],[101.9646,15.4558],[101.9234,15.4676],[101.9199,15.5176],[101.9248,15.5716],[101.9512,15.6053],[101.9789,15.6177],[101.9909,15.6687],[102.0014,15.6878],[102.005,15.6814],[102.0227,15.6708],[102.0368,15.6637],[102.0363,15.6576],[102.0361,15.6497],[102.0533,15.6346],[102.068,15.6297],[102.0705,15.6226],[102.0727,15.6073]]]]}},{"type":"Feature","properties":{"code":"3616","name":"ซับใหญ่","en":"Sap Yai","cx":101.631,"cy":15.6171},"geometry":{"type":"MultiPolygon","coordinates":[[[[101.7066,15.5644],[101.7132,15.5405],[101.6652,15.5387],[101.6338,15.5478],[101.6153,15.5584],[101.5939,15.5661],[101.5681,15.5699],[101.5404,15.5687],[101.5016,15.5945],[101.497,15.6289],[101.5302,15.62],[101.5647,15.6314],[101.5709,15.6329],[101.5788,15.6353],[101.5836,15.6413],[101.5906,15.6652],[101.6066,15.6749],[101.617,15.6768],[101.6409,15.6849],[101.674,15.685],[101.6932,15.6864],[101.7076,15.6819],[101.7366,15.6729],[101.7422,15.6437],[101.7345,15.6049],[101.7237,15.5827],[101.7066,15.5644]]]]}},{"type":"Feature","properties":{"code":"3602","name":"บ้านเขว้า","en":"Ban Khwao","cx":101.8391,"cy":15.7874},"geometry":{"type":"MultiPolygon","coordinates":[[[[101.9748,15.7259],[101.9784,15.722],[101.9724,15.6889],[101.9662,15.6881],[101.9567,15.68],[101.9465,15.6788],[101.9475,15.6727],[101.9432,15.6705],[101.9241,15.6582],[101.9053,15.6683],[101.9005,15.6783],[101.8949,15.6873],[101.8837,15.6951],[101.8756,15.7071],[101.8542,15.7169],[101.8442,15.7269],[101.8424,15.7311],[101.8287,15.7334],[101.8166,15.7416],[101.8165,15.7478],[101.8086,15.7766],[101.7881,15.7896],[101.7709,15.8035],[101.7601,15.8043],[101.7381,15.8255],[101.734,15.8327],[101.7409,15.8422],[101.7424,15.8466],[101.7321,15.8428],[101.7338,15.8573],[101.7201,15.8505],[101.719,15.866],[101.7077,15.8753],[101.699,15.8898],[101.7177,15.8966],[101.7085,15.9086],[101.701,15.9179],[101.6912,15.953],[101.7139,15.9724],[101.7766,15.9413],[101.8435,15.9184],[101.8794,15.8849],[101.9182,15.8623],[101.9346,15.8177],[101.9446,15.8024],[101.942,15.7734],[101.938,15.749],[101.9657,15.7358],[101.9748,15.7259]]]]}},{"type":"Feature","properties":{"code":"3603","name":"คอนสวรรค์","en":"Khon Sawan","cx":102.3115,"cy":15.9139},"geometry":{"type":"MultiPolygon","coordinates":[[[[102.3203,15.8255],[102.3279,15.8037],[102.3079,15.7937],[102.2847,15.7877],[102.2761,15.7812],[102.2561,15.7815],[102.2533,15.7701],[102.2411,15.7978],[102.2384,15.7998],[102.2333,15.8109],[102.2219,15.8265],[102.2043,15.8831],[102.1808,15.9198],[102.1707,15.9817],[102.2424,16.0531],[102.2809,16.0724],[102.2859,16.0703],[102.3023,16.0391],[102.3272,16.0306],[102.3439,16.0353],[102.352,16.0263],[102.3552,16.0052],[102.3684,16.0068],[102.3747,16.0002],[102.3848,15.9973],[102.3855,15.9808],[102.3723,15.968],[102.3669,15.9556],[102.369,15.9536],[102.3706,15.949],[102.369,15.9486],[102.3637,15.9328],[102.3623,15.9289],[102.3614,15.9204],[102.3533,15.901],[102.3434,15.8822],[102.3384,15.8742],[102.3221,15.857],[102.3208,15.8475],[102.319,15.8451],[102.3203,15.8255]]]]}},{"type":"Feature","properties":{"code":"3601","name":"เมืองชัยภูมิ","en":"Mueang Chaiyaphum","cx":102.0653,"cy":15.8311},"geometry":{"type":"MultiPolygon","coordinates":[[[[102.1323,15.6746],[102.1321,15.6669],[102.1284,15.6593],[102.1196,15.6524],[102.115,15.6462],[102.1117,15.6441],[102.1021,15.6368],[102.1055,15.6313],[102.0993,15.628],[102.0956,15.6314],[102.0885,15.6318],[102.0896,15.6252],[102.0851,15.6194],[102.0812,15.62],[102.0734,15.6176],[102.0748,15.628],[102.0688,15.6336],[102.0458,15.6297],[102.0306,15.6523],[102.0323,15.6624],[102.0272,15.6732],[102.0159,15.6805],[102.0022,15.6942],[101.9916,15.6897],[101.9814,15.6857],[101.9737,15.6851],[101.9801,15.7028],[101.9734,15.7217],[101.9651,15.732],[101.9418,15.7415],[101.9373,15.7695],[101.9396,15.7839],[101.9429,15.8124],[101.9341,15.8274],[101.8896,15.8666],[101.8555,15.9098],[101.841,15.9266],[101.7527,15.9745],[101.8786,16.0002],[101.9115,16.019],[101.9328,16.0364],[101.9461,16.0433],[101.9649,16.0991],[101.9903,16.11],[102.0021,16.1507],[101.994,16.2053],[102.0287,16.1936],[102.0476,16.245],[102.084,16.2109],[102.0834,16.185],[102.0737,16.1772],[102.0671,16.1548],[102.0852,16.1138],[102.0734,16.1034],[102.0835,16.0859],[102.0495,16.0745],[102.0516,16.0554],[102.0372,16.0279],[102.0446,16.0269],[102.094,16.0326],[102.0855,16.0019],[102.124,15.9831],[102.1808,15.9198],[102.2043,15.8831],[102.2219,15.8265],[102.2333,15.8109],[102.2384,15.7998],[102.2411,15.7978],[102.2533,15.7701],[102.2315,15.7463],[102.2009,15.7414],[102.1881,15.7403],[102.1869,15.7486],[102.1798,15.7497],[102.1639,15.7463],[102.1629,15.7421],[102.1559,15.7321],[102.1535,15.7277],[102.1547,15.7199],[102.1529,15.717],[102.1495,15.7075],[102.1448,15.6796],[102.1323,15.6746]]]]}},{"type":"Feature","properties":{"code":"3613","name":"คอนสาร","en":"Khon San","cx":101.7679,"cy":16.5761},"geometry":{"type":"MultiPolygon","coordinates":[[[[102.03,16.5254],[102.0729,16.5028],[102.0434,16.4608],[101.9777,16.4675],[101.9587,16.4827],[101.9268,16.4808],[101.8533,16.4929],[101.8141,16.4784],[101.8103,16.445],[101.7484,16.4839],[101.7443,16.4592],[101.7267,16.4558],[101.7054,16.4683],[101.6812,16.4509],[101.6758,16.4227],[101.6554,16.4261],[101.5692,16.3796],[101.5442,16.3892],[101.5301,16.3958],[101.5043,16.4278],[101.4731,16.4795],[101.4654,16.4979],[101.4723,16.5291],[101.4967,16.5389],[101.503,16.5457],[101.5195,16.5495],[101.5081,16.5557],[101.4985,16.5796],[101.5064,16.6167],[101.509,16.6554],[101.5106,16.6769],[101.527,16.6794],[101.5472,16.6683],[101.5719,16.6483],[101.5712,16.6922],[101.554,16.7116],[101.5598,16.7307],[101.5875,16.7239],[101.5918,16.7092],[101.6179,16.6857],[101.6565,16.6885],[101.6983,16.6771],[101.7026,16.6685],[101.7246,16.6514],[101.7369,16.6612],[101.7442,16.6695],[101.7539,16.6523],[101.7783,16.647],[101.8056,16.6529],[101.8227,16.6506],[101.8401,16.6546],[101.8542,16.6502],[101.8735,16.6428],[101.9028,16.638],[101.9111,16.6297],[101.9135,16.6342],[101.92,16.631],[101.9368,16.6321],[101.9556,16.6309],[101.9543,16.6225],[101.9584,16.62],[101.9673,16.6187],[101.9723,16.6148],[101.9756,16.6045],[101.9796,16.5924],[101.9779,16.5877],[101.9924,16.5847],[101.9923,16.5784],[101.9889,16.5665],[101.9984,16.5652],[102.0191,16.5597],[102.0236,16.5587],[102.0324,16.5417],[102.0338,16.5321],[102.03,16.5254]]]]}},{"type":"Feature","properties":{"code":"3614","name":"ภักดีชุมพล","en":"Phakdi Chumphon","cx":101.4011,"cy":15.9752},"geometry":{"type":"MultiPolygon","coordinates":[[[[101.4279,15.8315],[101.4141,15.7514],[101.3903,15.7452],[101.3484,15.7504],[101.3354,15.7539],[101.332,15.7735],[101.3284,15.7854],[101.3313,15.8035],[101.332,15.83],[101.3316,15.8505],[101.3286,15.8584],[101.3405,15.8884],[101.3626,15.9077],[101.3743,15.9195],[101.3637,15.9317],[101.3723,15.9557],[101.3581,15.9632],[101.3372,15.9917],[101.3414,16.0125],[101.3301,16.0342],[101.3299,16.0541],[101.3309,16.0762],[101.3354,16.1184],[101.3408,16.1537],[101.3561,16.1742],[101.3632,16.1856],[101.3788,16.1791],[101.3845,16.1734],[101.4025,16.1561],[101.402,16.1419],[101.4147,16.1276],[101.4309,16.1186],[101.4444,16.1247],[101.4718,16.1055],[101.4836,16.0953],[101.4976,16.0684],[101.5029,16.0353],[101.5053,16.0169],[101.5233,16.0076],[101.5264,15.9965],[101.5288,15.9718],[101.5487,15.9491],[101.4932,15.9672],[101.4604,15.9285],[101.4543,15.8882],[101.4346,15.8499],[101.4279,15.8315]]]]}},{"type":"Feature","properties":{"code":"3611","name":"บ้านแท่น","en":"Ban Thaen","cx":102.333,"cy":16.4138},"geometry":{"type":"MultiPolygon","coordinates":[[[[102.4247,16.3112],[102.4115,16.2704],[102.3662,16.2856],[102.339,16.2907],[102.3236,16.3128],[102.314,16.3498],[102.3063,16.3717],[102.2373,16.3726],[102.2225,16.3893],[102.2406,16.4376],[102.2398,16.4562],[102.2284,16.4775],[102.2056,16.4987],[102.2278,16.4843],[102.2408,16.481],[102.2563,16.4667],[102.2642,16.4619],[102.276,16.4558],[102.2778,16.4569],[102.2933,16.4461],[102.3002,16.448],[102.3186,16.4461],[102.3426,16.4464],[102.3577,16.4484],[102.3679,16.4479],[102.3732,16.4364],[102.3836,16.4421],[102.3944,16.4549],[102.3943,16.4597],[102.3963,16.4664],[102.4042,16.4603],[102.4056,16.4412],[102.428,16.4135],[102.4485,16.3976],[102.4474,16.3785],[102.4363,16.3363],[102.4247,16.3112]]]]}},{"type":"Feature","properties":{"code":"3612","name":"แก้งคร้อ","en":"Kaeng Khro","cx":102.1753,"cy":16.1298},"geometry":{"type":"MultiPolygon","coordinates":[[[[102.2424,16.0531],[102.1707,15.9817],[102.124,15.9831],[102.0855,16.0019],[102.094,16.0326],[102.0446,16.0269],[102.0372,16.0279],[102.0516,16.0554],[102.0495,16.0745],[102.0835,16.0859],[102.0734,16.1034],[102.0852,16.1138],[102.0671,16.1548],[102.0737,16.1772],[102.0834,16.185],[102.1025,16.1999],[102.124,16.2151],[102.1522,16.2007],[102.1961,16.192],[102.2173,16.2184],[102.2408,16.2356],[102.2869,16.2384],[102.3036,16.2573],[102.3467,16.2866],[102.4144,16.2513],[102.3712,16.1957],[102.3272,16.13],[102.2885,16.0913],[102.2809,16.0724],[102.2424,16.0531]]]]}},{"type":"Feature","properties":{"code":"3610","name":"ภูเขียว","en":"Phu Khiao","cx":102.1571,"cy":16.3708},"geometry":{"type":"MultiPolygon","coordinates":[[[[102.2853,16.2365],[102.2322,16.2241],[102.2045,16.2063],[102.1782,16.1878],[102.1356,16.2149],[102.1094,16.2119],[102.086,16.1918],[102.0513,16.252],[102.0924,16.256],[102.076,16.2798],[102.061,16.3293],[102.0479,16.3576],[102.036,16.3644],[102.0294,16.3723],[102.0204,16.3707],[102.0089,16.3697],[101.9976,16.4028],[101.9674,16.4642],[102.0159,16.4573],[102.0678,16.4938],[102.079,16.4964],[102.0942,16.498],[102.1056,16.4974],[102.1342,16.4954],[102.1487,16.4985],[102.1573,16.4982],[102.1633,16.4975],[102.1728,16.4911],[102.1831,16.5064],[102.1985,16.5042],[102.2048,16.4994],[102.2169,16.4791],[102.2346,16.4714],[102.2355,16.45],[102.2238,16.4165],[102.2224,16.3831],[102.2493,16.3755],[102.3107,16.3562],[102.3189,16.3338],[102.3344,16.3058],[102.3467,16.2866],[102.3036,16.2573],[102.2869,16.2384],[102.2853,16.2365]]]]}},{"type":"Feature","properties":{"code":"3608","name":"หนองบัวระเหว","en":"Nong Bua Rawe","cx":101.6571,"cy":15.8174},"geometry":{"type":"MultiPolygon","coordinates":[[[[101.7548,15.7044],[101.7423,15.6884],[101.7161,15.67],[101.7096,15.6874],[101.6877,15.691],[101.653,15.6922],[101.6281,15.6832],[101.6206,15.7139],[101.6324,15.7351],[101.6094,15.7485],[101.5996,15.7513],[101.5774,15.7709],[101.5573,15.7715],[101.5318,15.7807],[101.5103,15.7959],[101.5013,15.818],[101.5091,15.8323],[101.5152,15.8452],[101.4966,15.866],[101.4543,15.8882],[101.4604,15.9285],[101.4932,15.9672],[101.5487,15.9491],[101.5538,15.9746],[101.6506,15.979],[101.6844,15.9539],[101.702,15.9424],[101.7068,15.9177],[101.7004,15.9019],[101.7028,15.8968],[101.71,15.881],[101.7122,15.8675],[101.7168,15.8553],[101.7292,15.8589],[101.7302,15.8542],[101.7365,15.841],[101.7454,15.8409],[101.7334,15.8359],[101.7439,15.8326],[101.7442,15.8104],[101.7621,15.795],[101.7855,15.7997],[101.7963,15.7705],[101.8184,15.7703],[101.7985,15.7388],[101.7548,15.7044]]]]}},{"type":"Feature","properties":{"code":"3609","name":"เทพสถิต","en":"Thep Sathit","cx":101.5152,"cy":15.5914},"geometry":{"type":"MultiPolygon","coordinates":[[[[101.5437,15.4028],[101.5622,15.3737],[101.4961,15.3564],[101.4768,15.3676],[101.4553,15.3572],[101.4443,15.3529],[101.3825,15.3332],[101.3853,15.3476],[101.3777,15.3539],[101.381,15.3879],[101.3784,15.4404],[101.3744,15.5415],[101.3945,15.679],[101.4059,15.7366],[101.418,15.7563],[101.4346,15.8499],[101.4543,15.8882],[101.4966,15.866],[101.5152,15.8452],[101.5091,15.8323],[101.5013,15.818],[101.5103,15.7959],[101.5318,15.7807],[101.5573,15.7715],[101.5774,15.7709],[101.5996,15.7513],[101.6094,15.7485],[101.6324,15.7351],[101.6206,15.7139],[101.6281,15.6832],[101.6127,15.6813],[101.5966,15.6756],[101.5929,15.6497],[101.5784,15.6448],[101.5738,15.6367],[101.5675,15.6365],[101.546,15.6287],[101.5119,15.628],[101.5042,15.6017],[101.5262,15.5898],[101.5254,15.5693],[101.5256,15.5455],[101.5046,15.5187],[101.5167,15.4942],[101.538,15.4716],[101.5535,15.4579],[101.5764,15.4366],[101.5845,15.427],[101.5839,15.4169],[101.5574,15.4094],[101.5437,15.4028]]]]}},{"type":"Feature","properties":{"code":"3606","name":"จัตุรัส","en":"Chatturat","cx":101.8685,"cy":15.6092},"geometry":{"type":"MultiPolygon","coordinates":[[[[101.9063,15.4192],[101.8774,15.3914],[101.8225,15.4081],[101.7996,15.4233],[101.8089,15.442],[101.7817,15.4654],[101.7595,15.4991],[101.7282,15.5389],[101.7066,15.5644],[101.7237,15.5827],[101.7345,15.6049],[101.7422,15.6437],[101.7366,15.6729],[101.7492,15.6916],[101.7985,15.7388],[101.8213,15.7453],[101.8257,15.7395],[101.8366,15.7413],[101.8464,15.7384],[101.8556,15.7255],[101.8593,15.7111],[101.8783,15.7048],[101.8913,15.6948],[101.8983,15.689],[101.9062,15.6785],[101.9186,15.6663],[101.9395,15.6637],[101.946,15.6676],[101.9507,15.672],[101.9551,15.6764],[101.9588,15.6767],[101.9692,15.6833],[101.9737,15.6851],[101.9814,15.6857],[101.9916,15.6897],[101.9771,15.627],[101.964,15.6038],[101.938,15.5955],[101.9235,15.5399],[101.9143,15.4987],[101.9331,15.4565],[101.9121,15.4341],[101.9063,15.4192]]]]}},{"type":"Feature","properties":{"code":"3607","name":"บำเหน็จณรงค์","en":"Bamnet Narong","cx":101.6287,"cy":15.4714},"geometry":{"type":"MultiPolygon","coordinates":[[[[101.6666,15.3927],[101.6187,15.3641],[101.5866,15.3741],[101.5437,15.4028],[101.5574,15.4094],[101.5839,15.4169],[101.5845,15.427],[101.5764,15.4366],[101.5535,15.4579],[101.538,15.4716],[101.5167,15.4942],[101.5046,15.5187],[101.5256,15.5455],[101.5254,15.5693],[101.5522,15.5652],[101.5868,15.5636],[101.6086,15.5554],[101.6211,15.5512],[101.6478,15.5502],[101.6835,15.5434],[101.7251,15.5416],[101.7388,15.5105],[101.7767,15.4815],[101.7998,15.4508],[101.8092,15.4354],[101.7852,15.3898],[101.7201,15.3859],[101.6666,15.3927]]]]}},{"type":"Feature","properties":{"code":"3604","name":"เกษตรสมบูรณ์","en":"Kaset Sombun","cx":101.9053,"cy":16.3017},"geometry":{"type":"MultiPolygon","coordinates":[[[[101.9903,16.11],[101.9649,16.0991],[101.9461,16.0433],[101.9328,16.0364],[101.9069,16.027],[101.8505,16.0507],[101.8445,16.1443],[101.8174,16.1638],[101.8579,16.2234],[101.8486,16.2792],[101.8203,16.3165],[101.7365,16.3827],[101.7081,16.4196],[101.6758,16.4227],[101.6812,16.4509],[101.7054,16.4683],[101.7267,16.4558],[101.7443,16.4592],[101.7484,16.4839],[101.8103,16.445],[101.8141,16.4784],[101.8533,16.4929],[101.9268,16.4808],[101.9587,16.4827],[101.9873,16.4134],[101.9965,16.3878],[102.0142,16.3739],[102.0278,16.3767],[102.0372,16.3737],[102.0404,16.3665],[102.0464,16.3438],[102.0645,16.2876],[102.0788,16.2706],[102.0812,16.251],[102.0476,16.245],[102.0287,16.1936],[101.994,16.2053],[102.0021,16.1507],[101.9903,16.11]]]]}},{"type":"Feature","properties":{"code":"3605","name":"หนองบัวแดง","en":"Nong Bua Daeng","cx":101.5646,"cy":16.189},"geometry":{"type":"MultiPolygon","coordinates":[[[[101.793,15.9752],[101.7139,15.9724],[101.6912,15.953],[101.6708,15.9717],[101.5903,15.9765],[101.5461,15.9658],[101.5351,15.96],[101.5222,15.9898],[101.5204,16.0008],[101.5084,16.0057],[101.4991,16.0314],[101.5055,16.0649],[101.4836,16.087],[101.4797,16.1025],[101.4679,16.1223],[101.4345,16.1301],[101.4232,16.1218],[101.4138,16.1359],[101.3991,16.1512],[101.3894,16.1714],[101.3867,16.1783],[101.3775,16.1871],[101.3743,16.215],[101.372,16.2438],[101.3534,16.2601],[101.3696,16.2756],[101.3786,16.3173],[101.3814,16.3598],[101.3921,16.3732],[101.4085,16.3837],[101.3984,16.4008],[101.4173,16.4112],[101.4282,16.4331],[101.4491,16.4508],[101.5207,16.4017],[101.5401,16.3982],[101.557,16.3798],[101.5844,16.3937],[101.6697,16.4282],[101.6889,16.4308],[101.7242,16.4048],[101.754,16.3639],[101.8312,16.3034],[101.8492,16.2605],[101.849,16.1968],[101.8378,16.1547],[101.8253,16.0864],[101.8709,16.0525],[101.9203,16.0267],[101.9022,16.0007],[101.793,15.9752]]]]}}]}</script>
+<script>
+(function(){
+"use strict";
+const DISTRICTS = JSON.parse(document.getElementById('districts').textContent);
+
+/* ---------- specialties (names as used in CPH Consult) ---------- */
+const SPEC = [
+  {id:'oms',   name:'ศัลยศาสตร์ช่องปากและแม็กซิลโลเฟเชียล', short:'ศัลยศาสตร์ช่องปากฯ', c:[228,82,62],  w:.30, h:.17},
+  {id:'endo',  name:'ทันตกรรมรักษารากฟัน',      short:'รักษารากฟัน',       c:[222,150,18], w:.13, h:.20},
+  {id:'ortho', name:'ทันตกรรมจัดฟัน',           short:'จัดฟัน',            c:[28,138,212], w:.09, h:.23},
+  {id:'perio', name:'ปริทันตวิทยา',             short:'ปริทันตวิทยา',      c:[46,158,82],  w:.09, h:.26},
+  {id:'pedo',  name:'ทันตกรรมสำหรับเด็ก',       short:'ทันตกรรมเด็ก',      c:[212,74,158], w:.10, h:.29},
+  {id:'prosth',name:'ทันตกรรมประดิษฐ์',         short:'ทันตกรรมประดิษฐ์',  c:[120,88,218], w:.07, h:.32},
+  {id:'omed',  name:'ทันตกรรมวินิจฉัยโรคช่องปาก', short:'วินิจฉัยโรคช่องปาก', c:[18,158,148], w:.12, h:.35},
+  {id:'sgp',   name:'ทันตกรรมทั่วไปขั้นสูง (super GP)', short:'Super GP',  c:[150,100,48], w:.10, h:.38},
+  {id:'other', name:'สาขาอื่น',                  short:'สาขาอื่น',          c:[120,132,148],w:0,   h:.41}
+];
+const SPEC_BY = Object.fromEntries(SPEC.map(s=>[s.id,s]));
+
+/* ---------- status buckets (status_bucket in CPH Consult) ---------- */
+const BUCKET = {
+  pending:     {label:'รอตอบ Consult',               c:[207,63,42],  open:true,  ord:1},
+  treatment:   {label:'Refer รอนัด/กำลังรักษา',       c:[214,140,0],  open:true,  ord:2},
+  sharedCare:  {label:'กำลังดูแลร่วมกัน',             c:[124,88,218], open:true,  ord:3},
+  closed:      {label:'จบ Consult (ไม่ Refer)',       c:[42,150,83],  open:false, ord:4},
+  referredBack:{label:'รักษาเสร็จ / Refer Back',      c:[29,95,163],  open:false, ord:5},
+  cancelled:   {label:'ยกเลิก Refer / Shared Care',   c:[140,150,160],open:false, ord:6, cancel:true}
+};
+function bucketOf(key,label){
+  key=String(key||'').trim()||'unknown';
+  if(!BUCKET[key]){
+    const t=key+' '+(label||'');
+    const cancel=/ยกเลิก|cancel/i.test(t), done=cancel||/จบ|เสร็จ|ปิด|close|done|complet|referredback/i.test(t);
+    BUCKET[key]={label:label||key,c:done?(cancel?[140,150,160]:[96,140,110]):[200,96,40],open:!done,ord:7,cancel};
+  } else if(label) BUCKET[key].label=label;
+  return key;
+}
+const WF={consult:'Consult',refer:'Refer',shared_care:'ดูแลร่วม'};
+
+/* ---------- hospitals (from hoscpho.csv). size: center = รพ.ศูนย์, general = รพ.ทั่วไป, community = รพ.ชุมชน; hub = Node 1 (แม่ข่าย) ---------- */
+const HOSP = [
+  ['3601','10702','รพ.ชัยภูมิ','ชัยภูมิ','เมืองชัยภูมิ','center',1,102.0346,15.8046],
+  ['3610','10978','รพ.ภูเขียวเฉลิมพระเกียรติ','ภูเขียว','ภูเขียว','general',1,102.1304,16.3750],
+  ['3612','10980','รพ.แก้งคร้อ','แก้งคร้อ','แก้งคร้อ','community',1,102.2581,16.1073],
+  ['3606','10974','รพ.จัตุรัส','จัตุรัส','จัตุรัส','community',1,101.8550,15.5701],
+  ['3605','10973','รพ.หนองบัวแดง','หนองบัวแดง','หนองบัวแดง','community',1,101.8110,16.0827],
+  ['3607','10975','รพ.บำเหน็จณรงค์','บำเหน็จณรงค์','บำเหน็จณรงค์','community',0,101.6881,15.4399],
+  ['3604','10972','รพ.เกษตรสมบูรณ์','เกษตรสมบูรณ์','เกษตรสมบูรณ์','community',0,101.9527,16.2799],
+  ['3603','10971','รพ.คอนสวรรค์','คอนสวรรค์','คอนสวรรค์','community',0,102.2819,15.9327],
+  ['3613','10981','รพ.คอนสาร','คอนสาร','คอนสาร','community',0,101.9151,16.6156],
+  ['3609','10977','รพ.เทพสถิต','เทพสถิต','เทพสถิต','community',0,101.4330,15.3839],
+  ['3602','10970','รพ.บ้านเขว้า','บ้านเขว้า','บ้านเขว้า','community',0,101.9082,15.7835],
+  ['3611','10979','รพ.บ้านแท่น','บ้านแท่น','บ้านแท่น','community',0,102.3436,16.4059],
+  ['3614','10982','รพ.ภักดีชุมพล','ภักดีชุมพล','ภักดีชุมพล','community',0,101.4156,15.8514],
+  ['3608','10976','รพ.หนองบัวระเหว','หนองบัวระเหว','หนองบัวระเหว','community',0,101.7638,15.7536],
+  ['3616','4007','รพ.ซับใหญ่','ซับใหญ่','ซับใหญ่','community',0,101.6087,15.6144],
+  ['3615','10983','รพ.เนินสง่า','เนินสง่า','เนินสง่า','community',0,101.9939,15.5682],
+  ['PHO','','สสจ.ชัยภูมิ','สสจ.','เมืองชัยภูมิ','office',0,101.9700,15.8850]
+].map(r=>({id:r[0],hcode:r[1],name:r[2],short:r[3],dist:r[4],role:r[5],hub:!!r[6],level:'',pos:[r[7],r[8]]}));
+const H = Object.fromEntries(HOSP.map(h=>[h.id,h]));
+const SIZE_LABEL={center:'รพ.ศูนย์',general:'รพ.ทั่วไป',community:'รพ.ชุมชน',office:'สสจ.'};
+const isHub=h=>!!h.hub;
+
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const DAY=864e5, HR=36e5;
+
+/* ---------- mock data, same shape as a CPH Consult export ---------- */
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const NORTH=new Set(['3604','3611','3613','3614']);
+const SOUTH=new Set(['3607','3609','3616','3615']);
+function routeMock(from,spec){
+  if(isHub(H[from])) return '3601';
+  if((from==='3611'||from==='3603')&&spec==='endo') return '3612';
+  if(NORTH.has(from)&&(spec==='omed'||spec==='pedo'||spec==='endo')) return '3610';
+  if(SOUTH.has(from)&&(spec==='pedo'||spec==='perio')) return '3606';
+  if((from==='3614'||from==='3608')&&spec==='omed') return '3605';
+  return '3601';
+}
+function makeMock(){
+  const r=rng(2570), now=Date.now(), out=[];
+  const gauss=()=>{let u=0,v=0;while(!u)u=r();while(!v)v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)};
+  const senders=HOSP.filter(h=>h.role!=='center'&&h.role!=='office').map(h=>({id:h.id,w:isHub(h)?.5:.6+r()*.9}));
+  const sw=senders.reduce((a,b)=>a+b.w,0);
+  const pick=(arr,wf,tot)=>{let x=r()*tot;for(const a of arr){x-=wf(a);if(x<=0)return a}return arr[arr.length-1]};
+  const specs=SPEC.filter(s=>s.w>0);
+  for(let i=0;i<620;i++){
+    const from=pick(senders,a=>a.w,sw).id, spec=pick(specs,s=>s.w,1).id, to=routeMock(from,spec);
+    let created;
+    for(;;){created=now-Math.floor(r()*180)*DAY-Math.floor(r()*9+1)*HR-Math.floor(r()*60)*6e4;const d=new Date(created).getDay();if(d!==0&&d!==6||r()<.15)break}
+    const age=(now-created)/DAY, x=r();
+    const wf=x<.6?'consult':x<.9?'refer':'shared_care';
+    let b;
+    if(wf==='consult') b=(age<3&&r()<.5)?'pending':'closed';
+    else if(wf==='refer') b=r()<.07?'cancelled':(age<40&&r()<.6)?'treatment':'referredBack';
+    else b=age<45?'sharedCare':(r()<.5?'referredBack':'sharedCare');
+    const span=BUCKET[b].open?Math.min(now-created,Math.exp(Math.log(20)+gauss())*HR):Math.exp(Math.log(wf==='consult'?8:240)+gauss()*1.1)*HR;
+    out.push({id:'M'+i,caseId:'M'+String(i+1).padStart(4,'0'),from,to,spec,specRaw:SPEC_BY[spec].name,bucket:b,wf,created,last:Math.min(now,created+span)});
+  }
+  return out;
+}
+
+/* ---------- state ---------- */
+const S={cases:[],source:'none',fileName:'',snapshot:null,range:'90',hub:'all',status:'all',wf:'all',specs:new Set(SPEC.map(s=>s.id)),selected:null,mode3d:true,live:false,terrain:true};
+let AGG=null, STATIC=null, newPulses=[];
+const RANGES=[['30','30 วัน'],['90','90 วัน'],['180','180 วัน'],['all','ทั้งหมด']];
+
+function refTime(){ if(S.source!=='file') return Date.now(); if(S.snapshot) return S.snapshot; let m=0; for(const c of S.cases) if(c.created>m) m=c.created; return m||Date.now(); }
+function statusOk(c){return S.status==='all'||(S.status==='open'?BUCKET[c.bucket].open:c.bucket===S.status)}
+function filtered(skip){
+  const ref=refTime(), cut=S.range==='all'?-Infinity:ref-(+S.range)*DAY;
+  return S.cases.filter(c=>c.created>=cut&&(S.hub==='all'||c.to===S.hub)&&(S.wf==='all'||c.wf===S.wf)
+    &&(skip==='status'||statusOk(c))&&(skip==='spec'||S.specs.has(c.spec)));
+}
+
+/* ---------- geometry ---------- */
+function distM(a,b){const R=6371e3,toR=Math.PI/180,dLa=(b[1]-a[1])*toR,dLo=(b[0]-a[0])*toR;const x=Math.sin(dLa/2)**2+Math.cos(a[1]*toR)*Math.cos(b[1]*toR)*Math.sin(dLo/2)**2;return 2*R*Math.asin(Math.sqrt(x))}
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return(h>>>0)/4294967296}
+
+/* Building scale: real size when zoomed in, exaggerated when looking at the whole province */
+let SCALE=1, ZQ=null;
+const VX=1.7; // vertical exaggeration so storeys read at province scale
+const pathCache=new Map();
+function setZoom(z){const q=Math.round(z*4)/4;if(q===ZQ)return false;ZQ=q;SCALE=.8*Math.min(90,Math.max(1,Math.pow(2,.6*(18.97-q))));pathCache.clear();STATIC=null;return true}
+
+/* Stylised models in metres at real scale: [dx, dy, w, d, z0, h, material] */
+const MAT={
+  wall_center:[232,112,88], glass_center:[150,58,48], trim_center:[176,70,54],
+  wall_general:[86,148,212], glass_general:[34,78,132], trim_general:[52,104,160],
+  wall_community:[248,249,251], glass_community:[74,138,196], trim_community:[150,166,184],
+  wall_office:[214,226,222], glass_office:[96,128,118], trim_office:[130,150,140],
+  pad:[120,132,146], cross:[34,170,96], roofOffice:[130,150,140]};
+function floors(out,dx,dy,w,d,z0,n,lv){
+  let z=z0;
+  for(let i=0;i<n;i++){out.push([dx,dy,w-1,d-1,z,1.5,'glass_'+lv]);out.push([dx,dy,w,d,z+1.5,2.5,'wall_'+lv]);z+=4}
+  return z;
+}
+function modelFor(h){
+  const p=[], lv=h.role, W='wall_'+lv, TR='trim_'+lv;
+  if(h.role==='center'){
+    p.push([0,-12,180,96,0,11,W]);
+    p.push([0,-12,182,98,11,1.2,TR]);
+    const top=floors(p,-28,8,72,46,12.2,10,lv);
+    p.push([-28,8,74,48,top,1.4,TR]);
+    p.push([-28,8,30,30,top+1.4,.6,'pad']);
+    p.push([-28,8,20,5,top+2,1.2,'cross']);p.push([-28,8,5,20,top+2,1.2,'cross']);
+    const wtop=floors(p,58,28,48,82,12.2,5,lv);
+    p.push([58,28,50,84,wtop,1.2,TR]);
+    p.push([-78,-62,60,28,0,6,W]);
+  } else if(h.role==='general'){
+    p.push([0,-10,140,78,0,9,W]);
+    p.push([0,-10,142,80,9,1,TR]);
+    const top=floors(p,-20,6,66,40,10,7,lv);
+    p.push([-20,6,68,42,top,1.2,TR]);
+    p.push([-20,6,18,5,top+1.2,1.2,'cross']);p.push([-20,6,5,18,top+1.2,1.2,'cross']);
+    const wtop=floors(p,48,20,38,62,10,3,lv);
+    p.push([48,20,40,64,wtop,1,TR]);
+  } else if(h.role==='office'){
+    const top=floors(p,0,0,90,36,0,3,'office');
+    p.push([0,0,94,40,top,2.5,'roofOffice']);
+  } else {
+    p.push([0,-8,104,56,0,7,W]);
+    p.push([0,-8,106,58,7,1,TR]);
+    const top=floors(p,-12,4,58,34,8,3,lv);
+    p.push([-12,4,60,36,top,1,TR]);
+    p.push([-12,4,15,4,top+1,1,'cross']);p.push([-12,4,4,15,top+1,1,'cross']);
+    const wtop=floors(p,36,12,30,48,8,2,lv);
+    p.push([36,12,32,50,wtop,1,TR]);
+  }
+  h.roof=Math.max(...p.map(q=>q[4]+q[5]));
+  h.rot=(hash(h.id)-.5)*0.7;
+  return p;
+}
+function rebuildModels(){HOSP.forEach(h=>{h.parts=modelFor(h)});pathCache.clear();STATIC=null;relabel()}
+const visible=h=>!h.hidden;
+function partPolys(){
+  const out=[], S_=SCALE;
+  for(const h of HOSP){ if(!visible(h)) continue;
+    const [lon,lat]=h.pos, kx=1/(111320*Math.cos(lat*Math.PI/180)), ky=1/110540, c=Math.cos(h.rot), s=Math.sin(h.rot);
+    for(const q of h.parts){
+      const [dx,dy,w,d,z0,ht,m]=q, z=z0*S_*VX;
+      const ring=[[-w/2,-d/2],[w/2,-d/2],[w/2,d/2],[-w/2,d/2]].map(([x,y])=>{x=(x+dx)*S_;y=(y+dy)*S_;const rx=x*c-y*s,ry=x*s+y*c;return[lon+rx*kx,lat+ry*ky,z]});
+      out.push({h,poly:ring,ht:ht*S_*VX,m});
+    }
+  }
+  return out;
+}
+const roofZ=id=>H[id].roof*SCALE*VX+2;
+function arcPath(from,to,spec){
+  const k=from+'|'+to+'|'+spec; if(pathCache.has(k)) return pathCache.get(k);
+  const a=H[from].pos,b=H[to].pos,za=roofZ(from),zb=roofZ(to), Hh=Math.max(6000,distM(a,b)*SPEC_BY[spec].h*.85), n=40, p=[];
+  for(let i=0;i<=n;i++){const t=i/n;p.push([a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,za*(1-t)+zb*t+4*t*(1-t)*Hh])}
+  pathCache.set(k,p); return p;
+}
+const gPath=g=>arcPath(g.from,g.to,g.spec);
+function along(path,f){const x=f*(path.length-1),i=Math.floor(x),t=x-i,a=path[i],b=path[Math.min(i+1,path.length-1)];return[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t]}
+
+/* ---------- aggregation ---------- */
+function aggregate(){
+  const list=filtered();
+  const groups=new Map(), tot={};
+  for(const h of HOSP) tot[h.id]={sent:0,recv:0,open:0,bySpec:{},byStatus:{}};
+  const moving=[];
+  for(const c of list){
+    if(!H[c.from]||!H[c.to]) continue;
+    const k=c.from+'|'+c.to+'|'+c.spec;
+    let g=groups.get(k); if(!g){g={from:c.from,to:c.to,spec:c.spec,count:0,open:0};groups.set(k,g)}
+    g.count++; tot[c.from].sent++; tot[c.to].recv++;
+    for(const id of [c.from,c.to]){const t=tot[id];t.bySpec[c.spec]=(t.bySpec[c.spec]||0)+1;t.byStatus[c.bucket]=(t.byStatus[c.bucket]||0)+1}
+    if(BUCKET[c.bucket].open){g.open++;tot[c.from].open++;tot[c.to].open++;moving.push({c,g,phase:hash(c.id)})}
+  }
+  // the provincial office only appears when it is part of the data
+  const allInvolved=new Set(); for(const c of S.cases){allInvolved.add(c.from);allInvolved.add(c.to)}
+  let changed=false;
+  for(const h of HOSP){const hid=h.role==='office'&&!allInvolved.has(h.id); if(!!h.hidden!==hid){h.hidden=hid;changed=true}}
+  AGG={list,groups:[...groups.values()].sort((a,b)=>b.count-a.count),tot,moving};
+  STATIC=null;
+}
+
+/* ---------- deck layers ---------- */
+const rgba=(c,a)=>[c[0],c[1],c[2],a];
+/* shaded-relief layer built from open elevation data (AWS Terrain Tiles) */
+const TERRAIN_BOUNDS=[101.28,15.33,102.48,16.82];
+const terrImg=new Image(); terrImg.onload=()=>{STATIC=null;if(reduceMotion)frame(0)}; terrImg.src='data:image/webp;base64,UklGRjhfAABXRUJQVlA4WAoAAAAQAAAAzwIAgwMAQUxQSFcIAAABDzD/ERFSFLRtIyX8Ye+/IxARE8DQyLqZDXfs+RVHHvEamRF4hVxl0XNsW5Ik19a2NTRENoBT7FPX5+zg4BBQ7VOfQ0420VPPUzZBQpKSDkkCkgWHgADYqQ0iJrYabq5qbrZMM07rRPR/Aig3FGRJUvK4xzVhDdkFPCNMC4QjIXAg+MeKUMR5Mp6iP6eI/k+A/N//74AnYufMa1Beo/OaoMSQiGViSsyIObF4NkMmNQJQYkZqAODddQEQxAqpMzmQOhGTq0RqBpBJjUsPjAYAKmcg+FwAmAxA4RQyA+DylRv4EwAkKqOLnK8Wv05lirqfUJmLyKmicAEvEJuRREhNyFUQ+QUTTVVJLkpjBnJVlsGY6KlGZXAmVmUy0nKZeADwqpA5mERVEVAp5xqcbjyc+LxEPIrIV4C0txMA1L3BaxcZXwOZwsdVAEJkAos3LRDBdd6ZXLWn04Iy0vOC7W1exS4L/kjIx4VXsbNpnWkBYDTf0H2NqxhuBp+3t4rIezsaVvnsFkR+Sqb2R1+ZE6uYoPuxDwIQxMp+9ONArOxHPi565Hzca2L46l6kL/zJXvQG7MWuSDvxKzIx3UlcYTvJK7zL7JnBiQWxQgzM0j7qDumyREx4lS/yghMLYt5lQcyJGTHtMttH3/kRsbeJFzIxJWZ/4AXsoa5JO0gwB9P/uc53MOf6Ylz+O1c0l19jO8hrfAd1Teygr/XtCZiC2T2xuU9+T9nc14tic/X9Ht9ec/XFRsy3JjsIYmVrehP6wa5KxDIxJYaKJz5x68WJDuzqK7+Q8Wx0/OrD4b3xU09s4moaffovMhuXlyIzYgKUzavTpy5AmQFj8/YT3Pb76WX455bkttogVu535mADNeerxIIYmCVimZgeWA+2e8nKFMwmxb18EnLFJbPRikHXiFFWMdoaOapUDD9eo0bhFxVljZ79ya0RdJDkFwvTGjIty7AwrqHTQqYk8ihjWcGmFUGSxy/LRAhnJHnl6/i4AemEkHGNGPc58mWtHLdYnoi9mGOFghhBK+ZVGgJrKARWCY7S1lwCgiYFM5LU4mBBkluSRFuKxFqa1IkFsUIMzFKdslidsZQ6Z0GuChitShirKhivai6hiRoFM5pSozRIFYJjFQfHa4omapLGidkxBI0Sy8RSTYI1rVQqTakJsASr1482bVQ4WIDlk6GeXF7Ri7IuU2K5y1KXySHUolKXSY8VYkHMu8yIaU3T5kMQnHQIiiOHYCtzmnIMsaeoyeeW917QWJdp7yVNrmkuxUkVBuYri0XlQ8iVBZgvSisMTMEEJxNLFQdHagsmqhLGqwxGq3xNmVg6iIARXqXLoi5Z/CiCxYhpnYMZSz4KZUnEpMdKg6FElzkxa9AlKbF8GIKSiEmPlZYiiZYm9QZZkhHTLssNhpIaHEUaY0eFWLTkjpyYtRSJNkhzKUpuMJTU4GCBIo25o9ISJNFl3uIk1mXaEjvKxFJL7kiOo0AKsSDmTQ1qXaYtQpKJJWLSDFKIBTEnZsS0SUAysURMeBViQczblMOIKbFMLBGTdsMoXRZd5ofiGNZlSsxWCAwnFoeSD11ZoVaWGDiU4EjE8pEkhxKztuJwZu81NWc4LxR5qBMSiNUdlJeloUjeoCFJPkOqcxI8OxgxJxbEnJjVGZiyeJ2AHbJCiYZcUmkIlidiL3jhc2Koc5hE7NdVAfNfYkg1CVYra9pcU2AJFmAOpmCyp1RzaIRX1BWLEct1ubLYUqpzFuFVGuxXrp+MBA2HJRHLxJRY7rJELDc4ihLLvEoiJryiJcByR95SYE1qxLRBUIyYNihKPgwBOyja4iS5xXaUWpxEWgOkNBVYg0aLgOnKbGVO4sSsJUiUWG7w5gqU1JAo0lgkpaVRGwRMWVKdsQivQsyJRYMvyYkZscSrCC9rifcCbUmSfBxBklqcJLcEiRLLx5Ekehz16FlLr6xIvCXBnMS6zIlFSzwZ8tErx1ErS7BYkUdLgthXWopEWntF2iJgSpJbjCS1OEiRVgPxJgWxppMcuc0xXkm7UYxGywddQSHsSWi5rGkrUwhbRSB0lQOR16mV9TMqrSIQwivWOQy+0m/zPgJ0JZlnM9JKB2CErF3zLrFajFPx1RTgcbUzywao3DH6r0kX5HtY/zJIT5ruIT/LoAdJctevp+bIvT+fxjqTMjG9mwwyYno3HZSJCa/SZXE/24gTM2LaZUZM7+dzMrH0v4N408lnkfAqxGIDNcaJGTElljfQC0nEhFdsQMYUYnhH0THlyRAX2JhvgylYBksX+JSQjTmxL2whpuRnhrSFHPJaeDmxL/Mqssma4cSCV/khsfe20TOEV7y7yOPkR6czrMv06GwbucvSNnwb0mOly6LLfCO2DCOmXZa7LHWZ9FghFl3mW9FdWJdpl+Uu03cZ2YU9m/lWzqNkzzQ1QJ8Z8jtNriJ1mfRY2U684rAdf10UYrEdu8+JGbFMLBETXmVDfl0QM1p/g9JKyBuKu0KmxErlQ2El8sQqZNs3iTxuLK/a+kWly2J7tQEnZsSUWCImvAqxIOZdZl2mXZZ30AtIhGZi0w3hKeNSYTTwitNSMJJJJwBO6UkGUi4iZwBG6gRACZmIyAxkViMgLErTBWUX8yoxV+jVCU7DxxaZjYYNFXlhyjT03DSkXUyr5FNFWviF8JDplux5nSTnG7GreRURmZeMTRGRYSntCmuGLM8owsZvyOy7Ot1HHulYxb5XeAUoqzwjs5IJiVCS6wHCp8jihYbUxNKpELIlCTYfA3rjB2TKCUg33iMTAgjdJZc5WJlMzuusvOSBlQrjmd3fiV04TQDilCmNAFwSpQmACuerTExIj0Ah5sSM1QBkOgBWUDggulYAADCHAp0BKtAChAM+YTCTRr+oKqsm9VnD8AwJY278F/AbGS+7zfln/TvmrnOpoo9qV0N30/w/+j+Wb3aOzPgAc2iKho/f9n/Y/FW0CqR/d/hv+//iyn1+1+T3+C/aX5/uOfH/7xMagkPHepz+J+pXFqd68/Bv/J9tHwI+I/6X/28nfxn9h/8/8H08NoffVl35hf/7tDf+2vhi4CIx9EICGTuJiMfRCAhk7iYjH0QgIZO4mIx9EICGTuJiMfRCAhk7iYjH0QgIZO4mK/AnXAh9eBOuBD68CdcCH14E64EPrwJ1wIfXgTfwh9eBOt2SaKwHaYC5mWqUOYxWAuZlqlDmMVgLmZapQ5jFYC5mWqUOYxWAuawwrJZAVPAhxTnhh2NuNm9uMCoxqrNMnclhjwaqzTJ3JYY8Gqs0ydyWGPBqrNMnclhjws4VMEmVGw73bot6+bw2F+iVJvG/ST7spDVDR8XOvFEyKBkL26k3hY40WDrEdaxu+FCLtI3fChF2kbvhQi7SN3woXPPvVmERm3YucJeB3UmhaNyUWcRU1Jt4CIblLc+X29+HeTNoDvEOAhkCJmPBLR9ykh9+tncP/Fp3iMG+1nr4scaLB1iOtY3fChF2kbvhQi7SN3woRek54aj5UDYKWHg4W28uMv/I6mFvBk/CFMElYD72ZZt+/kpGeX2epFoRucoyUVoqCh/Chfzpf9jkdi/c9PxhMr/EBz0j+5smWBU6FZ816vPVOivVSoE64ENejuyZ/PqHU1P/Lv4RTXxtRKKY4GBg9oAwM/DrURXwLgBIjshzstL8GPT4n5/ZBAA3wMyiUp97PixP/y93KjDYtiWFBCJqH4hOFZ0Z0NwrOjPV6Ml+M4CrQW6mI/NbxTXgVvyyA+LwoekaLSGkffDM5hoQXW0YMDB+mkoQf4J4eAbynCQQ7qdNdIHI5Jq8MHuMoZc342GbKEpfmz24HmrWpLAh9e1rdrYgHf40cFdl5UvtlmF2uOxVjLgLH0U/l/Xazb2oRMPW0306gxNz3k8pNA8tb+7UErBwCyMJ6FAdvjuhyWLnBRFb0drprlVnRXq9GS/ZpzYjpaetXoBUJZXTnlaDv9ze+Qo/eqqff0vUw3cIPjfeRybcKHsq0ZDvQa0yxZfho6qcknVbOH/jTMGR5t/qjTqFgpBQffQUyJrYMmbAw7jZ1i6iQ1i5L2hkbx5mxUsHQvrKLsxSlQW6s6M9XosL16El8QOFgDCffbPm17+CCzpp4JWT4KJmpK+ccfybuzdvUX0SxzTX+3JNOnWiV53QgNVoQFlSlJnvl3j+erBy5yI367A1khWSaqpNWPf0Li7ZNuybpPQ2CqVBT4eKITPer0ZCVhoT436kJnQOoUOKIoldNrpcpj3xFbO2epAjrIH3IDx7AaECww3U7b9RNNaoQt6CmzwR1AT30QiC19zuRn2rNYIN/vBUS9yAacFJ7D3c2yKeTdSUo8CNnEiM0kpaozr/m85zYjjR7r/tD059TWGrNoR/ULLVkTw6AOrRrDCUcHGu/bRGLIiC/Tzm6y9OS6ttCYOwT5uqjEVwwg4MGz+4lNP4uXyBz8ij7w8d8+a6CpRzXNfbvPOh/K/UWSEbrR6mE8cwDGvRVazzLPoZMBWGarK7FW80cJT5hzBjvLLqMoZZwpTF0ShCuYbYTSI7B1UcxsMIbH3Drsdhl3ZuT8OnmVCgkMfwxS0E8XTLGs+wc6hsubZLgewFtH/YOJ61jugvUdMbtGbYuevkDdbgNS38wRjwQyCOPKrNMj2YyYBGfm32VLvSO2lsObZ4oJ/h1DJztbmEF3rjxwpXJXjgUmhjhreWfO4Ai1gPw9ZsMjLb3PcCSJST/GVNgPmKpV//A4cO3vfPhglRexxbLJA33XUkks0Ngvbr0AerbA3qKGz7BG2IEp8MB+cMm+cyaNPNtRjI/j10i4YdwkUHda51Ikr/W2+fVWxUJu3XLdg+q7o4quRtqi+xhmWEvYODaVXQAfImX8DVirGEib0htKt7NH8CWxvBaQzdZn+UW5/o0kh1RKwiq4lwL3v4Rd32ALsfaDcOqVPBPJIicyJ9PHlh1zE5JXpADvSsqepA/qDaZNkyrGIArQsoUbevZT43G4JYbVZOlV/8k9cPBgMtLODxGnMNowMIckrGRFxO45NjtRCVAY/icsGK+Edd8q4WjRC/rhsZtC7vvdYskb4jDD+C4mao12KEBplD1PcOUHDQULYMPRgckqzG+6NVv3k83Ujk01tppy2BT41BkbYFfiJqaRt0L1Orikw62nvsKl/oV7V4VBtjEYazTFhXAfc99h2tdEI6a6w/EOgIw05f+wXyqVAnukvy42GC+381k6Hl1Ou4T7ICGD9RzdanszvQ1r7bR62YkcuGU7XZWIz2LGwgcNrkBsFJsixlIUu3kdpsZVMBA4XUXIZUEwHsFVl5Y0g/QdM3mVToM1OzMZnyJoxQS/RBOV/iboZrM3G9z9/FgLCy/Fy33EK+xG+qZdWtcC/dmjxg3Tn6tcZ2KVbO5Vm1s20VHmPQySYu1ZxmlNywR+LXAYxUk8FbOkZT4GejirLR2q1sPzEX/0iQFZfYkb6+xyN2i5G7rU7tQ2blWwvrisQ7q8azvv7XPI10h+gC42X8mdwsbj3DD+21tM0fWWdiq5G6k+28fqXHnaAGoOd6xmepWi5M8BlUSm/3KU5xumrj0GAp59ZoHh1Oo7J3fE3UOsNsHK4OK0fhHcCYMzhpUIB3E43hQQWNtFT2v4XXtKVCuTLNi6g9+Dj/FXx9ONEAGcATTc69NadsqI9C2LDE17DTuRWUSsa4LGJmkfeTZvMv2WQowpUc1sZYGNwofGjCzDgOYxz0IUy+HY+nnWQLXAZHD4qml6psdluJtHFHqqZfW7DPePVVXorhNVnxw8mbgQPd1BsTISHjDn3GTNCvdlp8Vyca/u2k9bxLPceYGmNb/DQVnTU6NRtjqghMysu0EyFajS8Y4SavbNDCWqbjwRXZX/c0D+3m0koTjGLDsWuj9rUTrgO8vqcSmhpKpMk8/mmP4nlRyufiSRXb1jaCFgv1pd1IIbQRpZSuihXL7zBLdyRs91EulQqZ7TpEbI88Qtz3mqIeK9Kz6Z9b6DrGQJMrJQHV1dd545kYpXyNLjbqVYdKOmQQYR7dHpRqvPJEFuVazPsoORpzLsP5MYDpU/MNATQcr2509Dg8yUKUDlaczGPAiMaqKG8BXb95UYYjGi6yLrZr8WbwTJvfmGAhZDU45/6rAtBCDxnxVOSVKkyKzddiyaUsBbNxSPmUnxSyNQLc7BGfR973ZYjMksNb71S5HL4K0Ggqh3woIkG6QIfMCR9lIQheLlcZEzUkoHJOaXEQu6bIqZDv2RVVBFef7VlVZLefitj78EYPKRtYkt83B6Acfy6E6ibn43u5atUu+HG4K6rI+gc2DLbJcmWRRqtHAgPyYfQuvmGNoyQrKb6iNeSKK5qJsunDhIb9owMqfi86WL4oumOEeaUU5xUOO/0t5Z9yM+XBgTvQnWMie0qLjvbiwFBAVSd+1ZxpNiSY5/EPRdqNratO2k3Ngdb1+54SpULjRq4+1npsRkN6MsBQVZK2kSDUpXRQTxCODfJIC4CA0xUPfm+ben3WxvDh+e0iDf8/6BnKaBGmn376EJaC1+LTTE+fKN9bxfszGhpwIO4n6rw0WSunIZraStpCAbjj3ReEk/n1rcyNqfN/5i/H4zgvm8yMEp326ng4WaMPAx+/BcnwRD65HzLR9HHQ+r2TXeibpwAJ66t8l4hGrfbdrZYXFL26W4VInds6r/ouAZaUuC/7Uzk4m0EnwmitEAobAmN28NmI1Bzi/MT6MY/GHI5odJZADixTahcv3jYLu1LBC6KPEV3blcudaYpyp8uMbybag+Z9q+rLsVCZq20lSqzf5TciOBYRYOpBwoQ/IdMRKH+RjjRYOsR1hBsbB3C2XB+YXtNZUmqh1SzNnscLyBR/uc+MzwChe4FRDLWAcC4ZiJJmc35cHO0y+nKn29m12Kdr/OYqOPv37D3ti7hGoSlc+UVCi+6xVEPclz9W3i5ymS8aPRkr6wfIBYrMpbMjJCV0Qo5KoZvgRtUjDZXCgl3zFHhO0IA+xKEElpQZ7j/YqIVrbAnjtBYhPBMEsBfQHfCjG2xl7AvVQOlbsMy5M75kO/XlB8alpcHvTVvwhYhLw3969YsdLrfKNoj81pSNG9/AdMrs2VQfPafxXnL5CqrQeBdepskMU61d3wCVidgh6c2IWx2Prfup8y67M6RGd4hKfQljbmQGdH+fstCGdv3oiK9Z0oiMZk5mE1iuRFZhgEWKYxJY3dW14+JDKcTWVBdnf14JmmG/iPivXIBeoIpH3CunaNzyPKetgQr55kpi5d432lVhhvYBlkZq1M3C2jX9OJL74ISaej4vzKrCJim1kYWJRVNnUqwJLlXHg1afVP/T4mVvLpWWnrCthWO4QmZRjiCSoMk+ICYB9b7Va8FUAPWvOXvVuMxaoujhFWoi+rbRh3IhrxAgNHOAck86P4xEXUqJXmpGm375QhkzSLa9M/FtTm4N2bfNXP0xfS8ANuuPT0ydqgA39AYyR6d3txDgfSxDNC9P3l79ghCcdhLNOGOtokHn4D5cAlX7fWmW3Ilq06/MGqM5+JhZ1fmdGemap4aaK+ubxRamJg7X6vsLU129Ep+ljJdnjp5JWU+laciJDaHdE43waZGJvafLa1ctCAdC5c88PvUdwbc8pIhAs4+ux8t4wAxgpU8coYeUYzJQsy+Ih8RBGbq+jMHNKBnRIfuDayaekdRk6glqQwO8sxCWS5NMvfTsIs2vsIaraopRPj69vCseC177wzgx2dqcyhaSupu+e3iKybf0soh1REyC/L08L8v9LAehWE+m+HSQKMyJppkT5Db+7xUobVYfjWYUMuZ9UaOJY2YW69CaOZl5zirrRy07nulslejTa64AZoX+b3KigRZQXDCR42gwdZQrkFj5sB0bV6dMrCCKLqMEb1IDnbTsXCwUq/bzeDEovxo3tmgrl5wVYVCQrMhX5vckk+fWB3r08ffBrhnG3jPFTzPkhTN6X/XC9G9NuWmvMzPWhHcRyjQI73m5l01rBOWPyTUeVn6c3AHtaNeSXINougxvRlDP+IJYWnkqN82Da9DJUaaN9edAd3jg835rAf+Vl5e7RbqfB9cbbXuliv/XN57OOrPUf41ETw+nt0BpaWgoztP1of8sAhcWHoszywyjfE4LsguJDVw9lxggpyME5jfkFkJaWm16MsHoCJ/aM1f2NF0UteUplqexHj2VLVoJraEGK2cRyCc8BpFX45HhkPbxT+FLxA5weRGBYs95tslyRDXNXUXs1PshRvtQO98qv4CAxg2FkplctQ/iyOSfoS0gtWeglCShwv9DemCpX3w3GkFGshbuWSjpX4pL0mHyYhHHueMSX2/B4YqKUviclBD0l8BHr3pdGkRSJ7h4Nz4BJJYzIDOuwM5kGYbFpw2e2Gw9g6CwShT5/dlkWplOtO44UIRHXQzRFtI5F7R0xEI4diOEg86tNUWt4Z3IqQPA+Yw0zGtOhOjmXUJHTZ2NtyU/GIR2xICGTuJr14E64D9ZUPSSNK2zdQIAqbrfZWLyh5oViDOlb68VoMEWZQ3RK5/A7vJ+RRRAW9UgowZgDgTtaKcO6JBR3O3uYdxMSnz18d4jH0QgIZRL0Ecpyh3L/9Cf2jlIDnqrURRKsCTDWYcab82L97e2OJ6NOgLPmYgEuO4wdvlcWhRgs+X8o3siCPBj0FAPtCV0u16Ml+zTmxHQO3637YUH2bf0nrpALjko5FcryqSllf+Nd0TybNpwK7ogv3JGvy83NXeRcId+AZxA13wFvDjuJU90fdPTmxHS0+O9XoyT3vAKJmiAvUEfPkgFLHoVAk78Aao7Y1viWxjivZgjYIunByKZzWET/oQSM57SAmbzIQzrY8C0zH23LGzBofHKC3qyfKyWQFT2I82aEb6VdUQgPq/P27AZhKLt37knzwn6UAcmT04dn4rBf2XnbemYhoBZ7d16+WDT/M5knvEXslTrMmYly/H3ExGPohAQg72Ok32sMUC+j0vgufdROjSB1kB2ZD9PfrRNfENuW24pFG1/q0yXat/vc7HXV+0t4E4MBM8pCnMXM4rgLB50XRWQ26s6M9XoyX7NOZivbe0f0ykS4lcPqB9boi4e1/X5zYBWgNyjo4jIvXhXf751wyIjcsbPpFOaBMG3VnRnq9GS/ZpzYjkInFzCUFl2bSSFoWUIBOSlM5S8KCHbIkqA8kREBRi/yb61OQUs5T/2K9XoxtxHS0+JaAgsliDU5V0M17zrg6Wl69SV9QrhrQaLQCHYVTWDJtmFR5KWiXVm9OaYokrYpSoLdWdGer0ZL9kXbKaYSjDW3y9rRjROgPFU9XF5JyyRgyxCydoztaPwTcer3bJ9Sof6MvMZHVzXilKgt1Z0Z6vRkv2abMjyiJszrSuphzCNHXX64yF/v2cFkyCPd3dNc80DPtVw6hf2oVZ0Z6vRkv2ac2I6WbnMbCGXsl6RyXyx4vVZXbQOJ1K7OmAq+L2nM34RgU9kkn1VD45PhSlVBbqzoz1ejJfs05sR0tG+od9dCsISTtfo+OeDaux6JPNGmBjCqwZWhUWR41MoM8rcjKuQwW16Ml+zTmxHS0+O9XoyX7NNnUhGHKO53Ip63LWUpF0XA29iLZK9yjRGyGbLMbA7iLz4DDHZaYyGeqYSP2FZ8qfYVnyp9hWQ48EFmj1c6kTAUanatQ5vEnNaWCxBaKOpOFDj4OsR1rG74UIu0jd8KEXaRu+FCLtI3fChF2kbvhQi7R8OZkiRsOYJt72hNmzx/qZN67tepW57YvixxosHWI61jd8KEXaRu+FCLtI3fChF0+tSZwosHO5LDGAAAP7a7Pr9Z5Z5Y/c/ycA6dkQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA7XYQlQXKWiUPnoKGPTBl0x+Jx6QJ8OacOhAoY9MGXTH4nHpAnw5pw6EChj0wZdMficekCfDmnDoQKGPTBl0x+Jx6QJ8OacOfwDsXP/hUtrf5UU+fbk/YlXdNDXlJ77nf+8in6uT5UApEiMnUwmIRCYyGdspFMGDVfPBf3lawWjJrCJyWbDv2ytnIhqdVLF6AAABZ0gAwXWv3MT5gFTxDKiw6W7eG1nihBjw/iMAxgTCt1SgSSjTfOQ5Ml4wBK+G3EgdAoApYvDM/9EZ7bFLdvi2GNoRWyewm6EimyjNGr8tuHSUV9byB6gljXyCNwqCEtRWjrdKaGU2wlZqrJDs6ddK8yNoImqcQleSU57S0Hvyf978iIAt+aWeDM7HHvb7TqSIya1c8CMhy8ifwpUv2/gdBB6tsxzWqupmK4/Ic8Q69ZigaJTEGVfT94jZts2YXXx3CNwjLa5KSwOCIoeHcwACv4B9kOdkpWzIDAt/rsjJ7f0kMGwLT/aBQnSAHdcgew3Nz4GyY/KI+AAP9qHSzqrAfJIY1pp2s/liIZwZpQNn1vQmkzEIVgYk0X+l74YPQghCtJx4Nej/isvdbIhnTiToUC6Z96xwHc0DEcYKyIAkcajhoifAVYDM+BeXyYMFTlGtArltYv7POuD4ZhI/L5rUDISkM4HUk5XX/ErS7CvWylPGnVYCPxpxr1qgQH4fvDvoCmQN4XNCB0wfl4onPSkfVK5mlnQzPWM76hjFRQOVJ7NyptTpTzXR4VXmzOMDeavi+V1Yh8db3t6Fr7ekIpOjKHOCRkbwu0WywAOmUFyzP/9vxl+tV6S1HtjkN2Ioo8GEVamv9LmMNLi8a8UGZi4pRTpC6rWL+fy3ZeFqgSvujVcRXmjuFbAW6+cFYps2QUyR/gydW6HVhOnYsqwEZ1tDowwshYUbm8+F4TfNsx3PJxvYq1Xn/yIjH0MtwNpmraFIPWAN4Khg/gwIrg1YSoU2pxnCqL2oxVZppJWYELIDFXSWVLzZ/SOLDyycU7qZVc6SGAVzNArbsItdbdQ5vY9FOZZnGygBEulJ+IxzDSiJyu9eCxVVNsc0Qa405NLyUfd0uj2olEE4cQLw4jXpA0848lk/VojLa9zKR5ivX+72p+KkZOvyPivlH/37m279gATljYDfrG7ELsLJcYOy+WX+2vdEHsEmtZm8/ESwQR3OTLv6m0bDibHfngmnH5ffjuBbnl3fp4zlmXkI6OrJtBmAmRt6tIpeo/FKEnE5P5Y5205FMkBBUdC6azBlmP7QUqytfzFII7n4rq0GM/F0/0kRTcJ+XsP6NBscsI5fAHtCQoc4sHX5FequpiYRV5OZD2JBG/gpkCUCPSxWPyFzmFqY1cSSFb0Skh1QfKDUoUHh4anbWI+SUWlWbA16NHgujNxstvzBIrafwGUQl3XxGmOW7TXKpNO7dGY5CKF7ydVQpdcUwIgBeDZo9+LcIjvi1fZtg3Gha1yL6QgTAuUITKNYQ13RySmPl9R7HMFCHIuPkXY1Efyw9x3QbXi176vCk/i3Z6kAtac4EkebCqXW8xduwF15QMtDnbyuaUw805gur8xUUTDfpF90e4LFNgllz7ngi7NkvoMAD1j9BDbz8jXnd1sV+xnQcBfFnkRIsmIChnI6e3VPagRKKupDqflzTL10Jf1XSCPZ/q5qDogCv9yjUvZyR8Zd01y+BMGcoLa8qHgbXrrPsD/fpO2i9rhaTiRdkageiX+doJtQQ6pAS2O2eqgQdfGzlNzIonnvBEcHGmUigDgUktGz87TnMZNiZAJO7uDdqKOKAIepne2pGFtRhmLLiEM+B5HphQFYzfx19bX04qoG8N1j9ONMaLcFho3q2lAbWeRi82rEI6D7d2fKK2+OkXI7KM5UZyhzp1UKFBnxZ+7iGMDdGz3uOCWqS+yQh4rBzZH6gWjltR/3zQjOrxaHaZ7ufPJAPdsu8o7GMNP/dwT/TVAjij28KnFKGnLmGokg0G3uYEqmCEgQxrW4ITw8H2LO/dwUM6M1tcH32XTypCcqQAU4/B5aRuaXjE9YO6uCw5W1G6NMxQuiRRt3TwPwdclL4QjH9tXWMXl8ZpLJKznG7P9Dk1MyO6756KLmXNXiBjDusyfmhCeqjWb8Xv5eyUNNZ0iE1RGNDi+OpZ8n+aXbvGcHceMqfmUDAdYcietUxpDcbSOyvWHjoBjUyrOAEQGuIt8nDDakMQ+EaqG5B2cBuSRP1Jy140dukdS9q41BqupOQztRE0/GwT+Xj4bbInriSqp+2L+xuqqreu6UaITE/zLe6mk74lblpfLjpb4S7+zMkJsdT2ipLhU3kgyDCedbq3DKljd8dPV5VbABbrFMzxvrTgv4YKypYhnWbBvgJT5NLUYfzz116PKmQ2UF+pOj6Z02NSrsog+tppukP0vAgCj8Lie66ZB/KUWuAiNlH2iMtaH9Wa/5wdOSW3w0M0oXqTKsG8ddkEmlCN7uu/rdWbKcKADSXOMjrBv5lnBlS/S0pOEdIgpblHWxjpEl98qcwAiBLIErJLNbT/O54Ci+g5Iol0ZFvBeA5ckxjL+Zjco57GcAAADzeLKxlgnvDBWaQeGlPAO76z9pOJMiIg3+m7HV/RLAINVxu3JIGDD4YIyZZStiv/WskAy+QtDpg0T44vWuhM8v28864wY1QDaWgAf2j/ra00usPd9l12v7uVW+GzwkOA0FXuD4iwY7SpdrE192GD2gIC3UaN1C9uw4i4J9B0JQtyhQlu9rTuGeWqXSP+DJjHsnS/3H0lOmtlqkA6kOqf6yPP+vuRLCS9GJszShg9yk7R8ogz0Fjg+41dGy/cNawvqXhnSvgk1DkedSgPRKfVKE800r7ELWfx5U/D3J3iRij61B4sr2NYesiWPqKkx7IonRIoKpVQe2EK74J48PlF4mzTr7JPMhDa/uuTcPZkREXY11HW7aRuVGuv8hpE2ZbyWaT2PuqQ4AXxHhoh39UcOmuE/IIfg/02oXxVlnAG7/EMFdTmpfNT5DuLoAlF+fEWoeBgfviBoEt7qU2T58FqWsKpkwGJUDtEEiGtU2pxAgZR9PKcmL6zHMSM8Gt0zvaqiQID4h7Q3EvGeuR/J08o0MfnQ0Jfh5pinRdwX8iMpcF1s3e9W/0C/vJVKmAN8gp/qUDXLxtPDuVD/wy/NrWscQ4kd6ZA6I3EwAeVJWQpEEAEjxsDXW+bHgCUSHNQHLx01pIKOuKGQNs51o9rDI2SQzAoRyjKDQVqXRDToQjqwUVfrm2YrTB98m9dTXjpBy7WwQsrIY4fVp9Py+xrx41SOEUWy9QSd+SdIGqmceZXmU10jcZvsoSjyUtP6Unn1uuJ+q7dEUPAV+GkCzSvSqHXUXxRN+2oY6SIvZMzJzeE7PyykjTycPrJQPoplcEfrtpdjhemAT+gmKeF2jCI3UVQTOHMGbQVKNs3iPoJHXppy0nI28lyLxnszbtboMhQlpUVQB3kjFgrPJFUhm7tR7mvQdFp5ObwNo21wDZbLDmKn4E75vp66O9JUfX97tIVXE7ksaAEfPh9efM748MW4vwrpCb2SzCwOuUyVoWcOXDRsivm11AbpWUJDJqETmGaTW+COD9+XP4B900gVoLlRVSY+bXkHy1rlWu4Cx/7BFNycJSGP847oGutaZW8n4iXp4TO1ZAXXkDWLu3tw0vRY6pWidNIq2gLeoBkdHTmfSWrNV88d8zeTfgtarfJXOh02gWxyhqfFVIqVVOtgs+9hwr94uetr6Wz+DdmR37OhtcX/MCE0+B9fg9vBAhpxk5icxzmgvTUFlFzJas3d7/BeQgenSKzz89//oCrYGO4nZIKIIMRSPav76w2xugJArE9UwxgLqm+KPYRIP09rhZopO3MbMSVXNXw63aM8QojjAaeBFHzFO+Q2qkopAJBZzoJkkFVgCIqsjC5Pv5u0WSJdjjz+ZPG1Pgckaw9VfYgypg7GcWSrl18OPRvZJz7RJwr7loc5IBHldoY9e67qwOmAASKuR5lJ0m200YQgpVJHikWxxkbNaRN5uLerC93Ju5nRA9+uFa8/wsxNccHMhV6lCZpm4rKVRsJU6CAkt3WX49bI1nM6z9DyjGWwXK9nAtJy0caDz6QR9sfDXHUVA7FjAE+MxhEmp6Fae7+Oe/fnMU4yIGOuFxrRM2MXrd3lfc+kNAEyZrCU8S0s/laRPfVFuQ5tzGGZHdfIDbvSB7m3Syx8zSQLTcKHkSNlKiUlxvT1QexytyTudKoxh8/ORD8Q11WsbG8yqF/ZUuIEzP/ynmY0HVqV6Bzkumfrw7DFQwb0vDphrSApqyCN7XJ79voyHjyz6aw0FF9x1Ri//XI/v83guja/q37NT4zNMYcYykCkTJHWBOJXL9vJJxXiouFXIrA+EsoQLEdOgIhdW3s1smKzqFVdvXrGpdoBcEpm5STXszc5szqViZveZFMryeKucdbOzseSNTmEP775o7FAbJndHVyH6XIywzWuuzfXe+CFbISNoQ3+20VGqRHSVj2p7wkvhlJm+0WIsevZNTtoIDZFlGbTKXpj0QJTt0GLI0XSDN7DTv+VapdlqJ0BSxseNhr5xoKXbHYe2bhNPbQtZtaiCgl44981DWClkub6i64HESJJ4B17489jnaVbImPCSW+XrAEKwyITQbHySYBLVt00xIEMZUoRvtWOyo1xnbV92gAGU+WBilDnkEyD/dQTpBrCd63aRGNMv23xiAWGArBpCTIIKyDZysT7NTKSGkB5oxXED9igLfHK+XfrOsgU4oVfYBYV/mwXMMvxm4hI4Jhn8u8gG9Fdt2X1m/zbioBuhQQXfr151xv/axUiAmIab+dfjl7/ji64v1SmHWJawwjUAlhEFQu8lr/Lq/XKRlpLKcERc12pzFxKwkTgxnlwmqXtxRPL2ymjn1khtHq7MqPFJlAR+JqipkjnogBSGRLufwWvNFGEpI8aF4po73wKr+l9GyDYvtzscV4xLv1d9YnMetTpsc3PUO2JWCBwpsDHK7sDycRXj+zj9bn49j0P6kvVPxo5ZVsEhcKm0qJoYBFMhgYp6lxGeOuc0F9/gzyj8A/oj6MYUfRfdxS3JGLDJkE8lxt0FE8yk2+MHsZkcmN3spe5t5iFfwjrF9nTTs6L04sRXq2ovpeJf33fn4VkmEWNs97scj4+0zWyTk8/tnOVU+iOOmjQKU5XRTxATqX7uXzy5Dh/bNfM14oHShiYjdTl3/lT70pD9xLG0PAy8v1e9urC+9Veze9Ds3AsypT6zbGR1LWjeRT2FY5NCwgufV+CM/5ucLb7jV7sVpd2u1D5XliRhoSIVIihi+wZvcHBErmJDz0qUxmtJq+uVjn2OehjtKFcksqM47JKGNWwqskVkHLFihZUA/ea8UmHsWxImHO5/pE/D4kM83gYqC9OFlmwbAVkJqPm4IqDxsAmbgeHAOuBfa4co904Lotugw1SylusNxI5Zp07dZ26y+htsWx8vqTr6Q+kkKbhoSuk5shGdmC0RinAQdL7KxD0wciH8P4jZNKcraBBb7oe2IEJrgKPE7+668POx/fRHUZWEJ/UPsLMXK8dWr7A2sovwIJrJsSG2sDCjRNb2tp+VD/DDrzwc3K/Aj5RaiuPuDbdKviQvdFnPhnuqup3KjFGxMVsPji4MkpilD2fr5wWbxvRwEqgaZp5xq28rqyuRd2QoXoBreS5SfKXY8hGEhQGtmC6mcY0Xxr/hPGZQ7zDoHONsTIrEHzrpSazz0ZymA6CRKeBqT9bjnEql4tdPHKkaSJoNP0SVkHDEPxR44YSJiza86I9BmsNRTu/72TNUgOpJR7NJSEKXlSLuW/b44A0dHEIh1Nlu7N1hQjZG7pofei+VroIibGMVMKom7w/Rf2Nk+IQtvjCJoq59UheN19hqR4+KyYsNANVm7JhJgO0EQe1uZ9chTr5edEpI6YE8TqL1LgiM00ShJqNWLWUQEAeLzL9SeDqaT3iHXevP6Ybz0at8fgn8n6RPzWF/wXnaWRvY4XNy9vsi7xqNNCOR4hMKemPfSWpai7yc5iDvslMxPmb48hL+LWu5vVmZJsRzcEMp78qmkTnfZM7xFhOmbeRJz2lE8NAQ+bnkxDQmx0xBGDAoadByCfzj08ZN5BGcedBr0eSIsJ80Sg7qfm6wz06CebtnUoOMlOqsWmE7ArrB7rz5tDVFuYvhsRP/RJOEXNfQZ2YmvkhpeTZxh8pe0U3ZKsnHM36jWDHaHjSCVjndatHrHrYTFwJolxcBLZD9q5mAE0KHb32Vyu4+4y94qtuxXvPTIv6s1ixEMopvSeJ8aORN+pnuYuoSVjLyPxlJDJcJgRgWDVeqq7CgCBLXwaR6jOk+KE4jsm5QnJfBb7jLP8mKAxKHKowsNNKogJJ/LwBUSx4xZfYC5GTEDKl1ucr8qCIvasolHcgnqJhiJzQjksZ8m1a7qntfLwClFaK6NP3l/kIMwZuEzdmU5T50dLm/ZVgDli3CRaid+RUs2bWaSjsTxSOB6CwhnHzj1c83pf6L5lgTd5nz+Ie2rV9Nkxx025CoRPEJYW/BScRDFJr+wk1dS+UQxTBr//MlkbljsuzzDjWhg5WOI/Alkx5wFp6nBoD6+Gn8+Pz3mC972o3sP6/eOE6LRNOEYtt635sUQDe3aWPRiwYv7SA+fBLIVRyp/2Pp8ddbEL8jar5o/hR+V0Q8Iw4NcsujH/l4AoaEcStXWCqODQnB/mUBCt3ihIycZ89/1GiZj1ALMN1BiyfCv+8wqgjztS7XkhsTok6UKCms2bWxkDR2ySuYbSejdJorfFGPTa5d5sdOz+11WdLxq54gTIf09Q0Nq+fak0R0wKDGlb8PuQ+1cPF0B8DLbXrjBuNpdR7GCT0VK2wfM8YsnkDBlY6O1vuHzwfx5P/mgYt6l0p543cr/mlSKtB5ZHxhaBkvwfxDqJkC1S0cLfcpKzJ4P+UKCd7yqPgrqpbjyDTltU4g0u/KG08WVUNI8KYzZxLv19JuYoDjsiP4lbMOF1oa3PHmr7fn89Nq2uGKXtmC6o3MZNUWK4qCkCSzBWqy72UoT3LK9yPvCm+n+GKyRmqX7K3kZaMMb/YZzS2x6h8hgWz4p2Et48EAaR4yPCzbaDok+SL6Sp7bSw+26mWeS99HIne7XH1UkHBUGkqL1vGZZuXMXyrsMgwlpThrMcgMDHuQ4mk7LBIqny5eRA29rMzf2jvwAxyDbGsliJ6mz9+Q6fEQ2EkbmHiykDzHnOXS6XWgfnXsGFmTyET6gGJbFEiwPFl4dMTIB3KHc/ZDOiHVbUwJ/kAUpqUa/XmPnROj2APz5SeG6wq/780g1Jm4pDg7TVH5SC4URJa1h0lNCLxFowxcL4Uf9hn5OMGj6FIS2vctzVwdRxIIpyrsfWU4l0LyZFylroTqx3ZLwmtfjPovU7UusbIfenrqURrAe1YtD1yQhE1Dkzfml62s/zSiLlZ4+c5ZVge4MXqXfrNx4yj6M2qGvke2OcAuwLfIuso3dgIwVO14itpex/d757P/VSuXEeT5crjTqq1Gj3NI6kRUeXJ2okltn2zTGSzlAiwRHV0ilKmDAe2JWL+vM5CjUr0+fWrTMNlAEH5JwudD/7KMlv8U0cYvDRmGyZHLKXkVzUDZPoKFBr6QlKTqYzK1jr9/6gI0VsDV+wFps/DCWoUaOkmghPzdOO+CQRDwVFgqiCRoIP0t/w1VtxvmzsuwFN7mv1llukGq+PB3WHgj7sxD1OdtVRzFDafUN8zJUCWA6VV9mbBZa/qnLqfAqf3oE5ZuYcvgMecf9bDBBt3jiyTRcLtz53lOVkhW63PyOEIBmTUJHw8jKbwKUw+uRuD/zl+i/rbPqiVfEnM4/t0u21qrQHaenO3o4ncCR4GY9GvRuXXt9HMb27n9xrAzCgzicCWHjW60DlCyuLa6EJF3OblpGzx0+Y8eTb4SvnFKedfbOpTDXuqdW9FDkdjocJAVc4EuwI8580Nsx2d9XOT8MLP+kFYDNEWTn0TZ1DQQJckjmNYpj4DsSVRLsX6oLXSL0R+6CzJK6Er2vq5fQDiwtQuqkbgnkG87qT3O1X2fIBCRL4dMon78wfOE7HkN+CC886HTFtr/h2Zk4h0nCPtMUJ2DgoVMaaS2IULBe0UDuu6v91zqcV2Ye6NC70bWg3mo33t5XaVk01Gr0EIQby6K/3Eq+WFff417l9BxuMU3tWUEiJ8gbRL6NcGx1vK5ev5c5PofQZzKk8C/6rqEBB463/+je8S8zNYALndajcSMybutT6QiRc1A19xDM1LnW9ojwrdPV11MWw+RTSnoYwingcpjSwFCJ5HCMxNqla9WjVZeOKLC/oWCwVrDBs/zPy/KIZ2hZ5K4TPRcEeKsCHVoxLSUzlkNG+Bf75n8K8uDDzZ8xRUZFUnKllPuQRf5a2AAyvNLNlraZW01/QVphtyguDvyg4WhmBEOc72UrLxKVZbbh1mvN5pRBW/2gnBJqsIhjv8t6h+XhgOI08b5mTq1WpxpeYz9iO7WzhyNIt1Em1kDIIPm5DJhDAfyOj/wRTx6gYaTspfUSVRHoFn/5q/gkJr2F7KytpIWWzXvIJycBl+f4SQwjWJBMTIBRPWXB2MNCVDOM1g3TPmG8pOWXlhUFL3E8re4OlgoerglvOCC53vc+4aNdxE4jflgulUPYz++j8wHHM+pPMHYiLmZt+rwnEF/eXpwY4r8sduCebeIsQm3dtS493ZW2jEXRhl4Dt560qxwvGLhgMXosV7iUSJc7w5bTedaMD4+Y1GKPZ3glPPfyfVB9tCupHK/8MpLzdpv1jO0dQ4eyiFLfPTgePmANX74mhOF2ieW/mcGR+pb/toPGPCEtJG9NXANsyo9vfdq8oEq1mk7LSwY+Man4/4oHkh6TnSsOVhRr0G8t3o09Fz1bUkoNQD5ZFbu76BdVutGIDhTHD2QV67i3JEKd7jJ8LjoVT8/S1nCbmQOLta339D1pVhA/KNAO03LLDpTgqj1AZzAMolshL2UybqLoK6lZR41Wp2rPRQ1cFumQynx0/FWYr6H6AsHoAfBoFRYaU5EzWPpXmBO3fPvj3tpTuho4/OLu8CRkdrIzahT52RLydsSHjwzgo05E82beuiaekjj5b5U1YXF1e+KU3MokkTdsSjN7YqFf/4IsJeXF/V0Mv1AxJxWuY7xUvd5Vf5sD5FnqJlI6OxkRP1d65M6KF8SQ96N4uhm6NPzir+c/Iwf/JftxgDbKRfNGnsc2DY8zJgEzVwvBTO8kCtphHZnqg6xio9lpPQ6TRP+Klu7nMuwB47hzJDLiqZP/bvqyFTiaPmAuuKdxj22EoYes7CXpNdCB0IiI+smwh4GHPrKNPaz+qAzu7NzEvz1e7bZTwPAq7T9hmRkpNfSmGAtpLLqPHUR+9AtJgth1D7oSmk3uVRuFD5zyOB4FWDim4sfUV5LPw7DQW7zOf2SyW1ZS3cjrouLpRiWBCKkTa1iKeHhvlhmuAqi+J8KenAaLt4BclbKLYtfo5fhOSDjfy1e2lL5TQTGBucwEBObyFjeakhNL/BcoTAwdiLks/1+G4+SKetjGEbd/1Qv352dD0oQ1T0mIFUFdpAN0xXWbO/Bvyu72lqNn7PDg2oTcsw4j+fQYIct5xT45iashqlHdsQ4E9XzvUqrNW89uMrahG3J7g9kvr5kxnIGx14okMdbMpSz5OY6HkBqyH8n2osU7MqmxIuhLZymYG7wknvueqNha+RZly+ruxFa/kVCinqilvYN934MuTwoNLVpwQVRgbliXsRkSyeAlevoF5b0usdxWLOSUO71Y5hSixAfeOYAVikaKat/zQilU8ym+8ZNUjKx0YANr661oyWOjT6/rYqYZF68gyyOP477vxsRFoOENIzORHis/fFvI3unEzR429EAlhQR1RBQ4Ndk6KEVNAcSM4WrAWcXRRvjPcxX/o9cpzNrd2d7z9VjM3+iOs1KLy7bw3uhCgZ4IrqPnBjHP9IqVwWS3TNC+9NxwVrKPvIb0xHetX1k0Ots1OisKfiupbz/OgQ/GTG28UmRdL3Vbexs4rLDuZvpfF7RGaTlm2cPJrsY9oQLmF+h019U9vteUQiCWvIlC9a5ufiFmnHLqgZETfQf8dWuJWLN5epac/wd4TMSmuiRfj+oI3CDsa8ncVWg3OrGxb/mvtmP1Hz9EdyYenik3V9wUFnNAHBlnaHVKrIUF6NpJwWwKBVZenqGDypFiykfy1VtUH4DFbrqtGNIw+7pfc42f6wN/ajTndizt5ar+WH/U4sxzMe6bR58wHrlYpCierbleZEBBJUeXB6+tD4v9VnRBeJDO5AlkWtD/VQU6lWFq02M+htL87F3n7DpBfsKSifvhZJsmLl9JNEsj6/u73ufr0ZISSkSMuxKJ/PUiKsDwEdVWxBizH9Sfuycea1105aC1Th5V0AQhWr+YEb1s14Bx8w/JQYCFuXaGAtPg+bIgjhI2ooh9XRvpljYscUt3SZX/GmjyOIGi3//8vilWynvxZBM5WVmlz8rggrBcTMN0lPVRs6+lFkO6nGJ3YXIqjUxgK4LDxt+KPvTI4gV7m4ZL+jg+zHJISIvXcs8YjJiV+IoX4EfVC5htVAbiz8yo5ROru4juLccXsmKYQtYD2Z0CIIfnQXUGhK56A/b6MG8l5nQOw998rq4CjQvVTH29d7z4TmKbaWCQ4HBXrIRm1kCwcKBkOqOJKvxBva45UKg4ODucjHYC3w4u3LBwCOZuL2D7FJRtdtq1aWkOoeEhDcgufF/Oy4d/xdxPZ9cvCRuBoOSOot9+qYH5/YyZviuBtvqwbUI14aL15XGWbZDfuUm10xbIBol9sQ9CHB9nj5k4RLgAvjrkOQp1hdRNpiSFSjCwY2EKdSshAXQGBWx14Z1+k3i3LsoOlXFyG4kAh6YdusgDf9YbHiEitAmhDfo+1Erq6HFdYvvE+HFE2tx0HHepIi65e55S174+pM8rKvksZJjvgDpoGi2ihu+nwkK0FR3Avea2U9mXhhU7Yhc5O4kopo+v2RX3ARoWTlMrLLGOEagf6ryKuGwEgn4zef4fBeY42/6q4hgj8cuwVAVaZNwc4ifBnSNCCd7TvC7mvLLV43Vv8W0mUvZbt9NlQh2oZSs0LaU7hoOh8YC5lFiGL6kIkzohJlmEXkb+HNjdPVxPj9t013wku/8MN7BEpuRIeGHHGV+Bn/RtoXlDNypfUnf/7OhZHx02C5dBrMZVza3AQjuaT6JxgMnuONF262+mLZM5WrLlc94f/W82/ylq3wcXPNW1cmgaAKjMBBWM3L8dyQVSwUQQ9eH6JtOP12nE/QZ48C9BjlIcWqLZ8EneFy5Xd4mY6i2N+uPFmIj5W1noKpRs4JSRPloXoutY4RHJZ5dT6To/O9U9KrR7MEw8IOtXGaZnX3QabcleH6itfyTdrtPosH94qj/uAGRKEkyyPsxfQyiUblSCHK7W9uWaVXTTgEc6AMlbCMYdxuJGbjpswXggAHCxa5XvCIocG140aKQANLiTlgyZr7ws9GzWf4Z+GNFs1LRQyP1VPgGaC0ef0gidMEYGSAUsHA6s7N0m+nYTzNlfEd8TtIgmFQIdozs0YX2zYB/l2HE0qcGwIgQrYQUNaOw6t7Ta9ml6TOer6c1iuP7dYMQ1icXyNgI2QxRrKE+QVw5EvmYJJLk3GLDy7MG7vfrIPQsEXmSLOQR+GB2cSXybn2breQ4n+kaIOGOhsLLz0krzcPTowSg4aLkpOaiNAJalx8swJRblqrwIuCzeTjEAq50oKXh8fE4OLr8Z+UR6hCTwAfZ4wD6fJsVPqDevnYQlFVYIoISZDXvqLpVyfT/DBnvm3gHy9AxNj9ctizSBIyETCsiameKqerjmCaGWxcd+C18pl9PKgvwq3PC+JemZMO4lzymVYQAo/g47baCle13hm0NLu9Py/68gtKPoqUY0OuMXLivrAJ/xlFvO+N/nUcmKyFX3czTaLh+HvD0AY7LNI7YYo/X9aCuviZiQ6dcrLfZpQmRXz5VQ41eItWXlliVLn8Pz+IpynqEcV3OolScBCGZgspw0s9SGa49EpTu7kCTcWY0myVKs8TlULRWenCRpgqlkxger+iwO2mDkA/4HzKik4H9PLMKN+k2vBHw7UKF8mk5GjD4LcjTvKIhlBt7ke1w22nlbZxqqbw1l1XChwh6QH3Q0IFCphvLC0U9bgO4flxoYtnZ7nzCKXR+j0qdhII/BN2K0PgzDkgakdXiFS6HgVCTuzj5bv1LOkbDUEdySByeaCEPsNHlc2A5pe9lzZQKTwuurNp2oYlx1U2BKmoae2xT7N7sP3GCBOTUidLxiSBJ3aNlnf/iG6p7/ATlxZfVdhoL53fu/txdUe0u7gzy78a+BzRALAOVT+6/bfTxJHjb/vHcsRsqN+w1/HdnItwLWxzzaICzdC7CcNDjKpRCbPwNvkZzGkRZ4ExOKOfUjzVp46lcF1d5wKvZPJ7OBE15pvlqwERXq9y2BIsrypTRaFZgZCN5FVEAjoB1ZxjWOvj3ng9a+9JqYq2MFwoVn88249WH7V3SSLEnBUxITRU9hwUm0SNuhR5hN0+riIxSk7Rw5sP4Bxb6UGJfJrLXXo9z4+q/5Gyy+cfQWOZTyacgE2vVShVl5PvDqYhBL8KxmOrAQ7c8gjAke+uTm67QkSr5qiag0HlEtp3GUZMw4LDKhwBsC7xpcqW/FUqmIy+0qHKROj4yPmKBGPPNP9dQP3GWffCXH4Jl9rzm7F7Zcb7EGRDkSJ8rY+rCUV0ICFdu1NmCodQWdtGAoJI9f/WLmHUbfQGFBhfueKFScnfGqjl6uilJBspeGv6psZaYlwKfJ1ZnxoKe1aujC5aW+SgNPucRqXs3hN5oZrrrvRif1/VFwm0htTimBtsOZ9I4RFYOMSLvxsWko7rIqUl6SjJJRpMMRqbvoFTsOwXQ6aF81ENjs1yucWh5a4FmQ3e9HEYr24/gWY12J5SZhl13p4OgEiA+4tONlgYUidEbQ9JF35sF1whW65HN3sI2y9Kg0JWvtpMpUn/cDBJoawBQM28VLd/OEt8Zd3Mc92d6fR1CCaIhD9R4Dyh6ka6WK6S1J3Q5ZzoPk/VfU2hkvDOe92dJ9d3H0NrPcsFq4iMFF54STtNsKTtqL8knD3AERThaD+EjONr+R2XCuzjAmQvO4irKXCCCzy1x2sb5QxJfE7FZmUgoRvrauMyjVswPD5cMtgMCU4GW/zXXAq0WYrHlETJuQiF3CGhX/PWjD8/ms82lZli/Ac1A2T727mycdGTOkuNomgVZhvEX02zTI1FDkWZrBqqRjEC3qCSS+8VXC4bNSgwtCSOeov/IGevl49fmJZHU+gwSckfcEepiMjafccUNKHVO4vXg3mahAIuTkS9MF7fsDhU0RSjCuxdkYQvP2GogWK9YcGqcj5Pe3KyKyiiZ31+lJE+B8UsJqx4YDGZLPqDXLuGmbUzIEPwI6kb6v8KDaBbY/Wx6Iwz919iE4+wqpDGlFSxbgNJx/2Z80ez7YmQzQJPmygJXLMvADXwHr5Mrxpc9bVAM6r5FMIN1bqqPxK6i/SshGuM6aUIhSUyjjfMftpOQHCqP7EqdmIrwIdmehkqlFDLduXTh3iqr22N/gfzhn9qPQ1gZ6MBN8G/+X+xrAt4yToSWetsCr2oc+9sQ238bzKZwCC2oOzimv/p/zFc4gqnHLAPmMuXNp6lwSyHS2esTAumg4YIZ3oPYDNoggQfZ1TwMYRkaBhlNDn38sayQI7pLwPKozlY97qstblQq4AAr9p/Q5pxiJEJMMHIyCwAnoi2cuxG+yvb2cb3RRL5thCNOf9y40JGEFxlG3v4+ietf7K8JLQuKgKO2YZo/7fiItt03Sv+a71D//tI6ENDQ3HG9JDn0B+OzWZvSm+AtjlXFsp1XIiJ14jvwZz40Tm3Kr/qfRdhhnhNFPN6kqIvZ2lk1AKI0JrcUK9oWryVYvSHIU37gBfLVHG7REAC8gKGI/oajEWhXEmiKvMdmPjjtWZaJdIpY/1y864YePqzAoSpZCtsMLuPg0mBf+EOcsafa3lnmpvBjtbZ+zYIdvTb3zxmRmkNqEOX7N4pvwddhnnpsUd/SjsMzaPsirkbJIQIR48VUvWPR36fQJlxIrutbJyoPPjlRC8KVjkLNM79HG3H10GmhZyJDR/UIfF0JSNtF0Gnh+bJxnxygAN5bf0qwTySBjhPzZuN0y6+Dpjsdc+v0E0/mi2QLpnalyytYFFB5vqFClzwlzqlBdna4NdxK5nRiRp3DaNmEEWMXfNxInJEvNIjo+Fv5N+U920bthJX+XPZf/+8Fp0w+n6W/zEKAWrd2iui86SEDvqZGlVfij2AvEx72JOnCscXrXGoYZE3nWbp2Zfb9yr/eW5/sEluwQdNfoUq4HnsFhx3CCJ0+HMT8jxGM1tRtV3bfNRVPglTpgxIQnDnwBGQVBomjfNMgYxGGjU7++U3hKnde1gCbXOPN64vDJ8V2dk58rQyJR5HHWyDemXe3KvFr+YL3/PxgK4s1rRm6xXyWiEOd+4bwZ7rfVJxNw5kISHDHJCQxb7K36nMny4rwouLjVQbpIDOj+3UP2YHZB1jLePco4zdhuvSdflmfuCQfC4yACLwPUamulpj+v5G5EsL01XYiErJM1LCaPDZG69RiO6rvOe7V/5XIlY3ZkDSpecHcKAhp2u/6qZKYq00QhYRa4VjCvaXi6qGCZqYWMyD0EOOCmT5VO+3KeLqPAiT9K4qgpido3XlgAARiuIE4XmdnmSoqkEwYixT/IdKO4UZeSuKAVVS68D0chDSiRAtZ16P7TqrpWzB8HoYiX6vXvbloaDW9fVqLG52lgNKkk2H7P7PNyYJyAr+V3o6KKdQaWEp9d49oILoLRZe1NzsTWy7nSKi9STD+Ina4CI+xWfVgvu3wp521Mf9UDlN3VGiZVvvwPYmbWojOGtfHSUM7+BYnVWjdbq8TI3Tq+6i/js2ZXpxbRHKEpR9vX1NhDnOS60i0yDCDcg1m410G2Kk0gubccALBp0ZUFe45u8yX2jzADqYCkdybB1AolCFwEA0XJ663ZE7qVtit+WxerebOCog6gSzyS20hL4Y93Lj5qEgrEqBo1eKNYDiUyFbLMJC62mIypl7s89MGCc1mqTagHycGo3aiEqSnDMbqGEs+qvMq0hPqK6W1sgT4NzLIUDry0YEDcQGU7JFUZMMq/aYWVYnde9ouwy4y1D5SAKyidF0Bv8rubW4ebE/cOq08WCVOffTBQemwJlb1zxR3Rz19Pf8+AAwNhJs6SYS/DrNvLdrVJNo4jkTg+xrF1W+t/QbzsFN0ChTQmDDZmdiUQaJ2Cob9BaFthHsnlwCimnGYdlM9QlCk4vj0mJHaYlEdBzM38aGcEY9AJlm4H1iS/irlrLVtwKVY0PusCMpOJrf3ZKXqDx4a2bHFWWPLzSOsQmyRZjrW8p3pUvICfvFifv8EQQRbGcNNLZmxcXHafJEsT3nN+9fUygTpvFtNMJ1cACVY4zgEapBJxFRkKJgsXV/6StvwLN46mLOpaclxKphLpGE4p+9TPBBqbDgS0V561859fKMd8RF0mWYRUI/nOrkq3QK9s2Qvn7FvfvizE8N6RDdloza1OaI3ocDr3JThc04AP/A1P8/q3pZBgFyq4RTkSZY7JdlRsC3i0RmUyVcWIfK5yZBASd4WMmXSOP08iZVCFSsVBtImq2PLzuEfEOfSNgjfjjF6YQB/1D1ofxrO18bMN16xGshNQSH3VVQBAM7Z/SPpnPlTbxy8fupSdzD8JNoKvHFns2IoUvHcjnwb5SSrQz7sM3UQw2RoBL37zuzhr6I8H+ltNOrXlVJrJS5NYagufJUHAWJEDlWCUecLROUfz/gGsfNBR2mczDqklu2E0eEmVQVrlK3FT3VKi1Na3dt8DESLK4VsJXsrNfT7OJvrSrLj0vRthV+DTrJfdSvMBwz/p8AQt66ndOqjYdSYDWn4nQP0T6bIChy7kMlXReqmdm9ZSW4KISTwmALDwIKntLKbXa/iDESmesUYLMUPf3diSJK4Ytl9FyPt2uWS+IvprRCug1p6Po1NhEk0Tk4nVJQ7jThbsKm2/HCvGF8foX6wZsNUqc/v6Ed59pL9+Kv3sOxenf6CbNnBwLDR5AVW0q+viLxpHEgl8/lOLkjHkbHg+d+M4Bw/uaxbEVr5oGTEBtC1WLziIU5+To6gaRcJZwCqa+mqUneh8dW2oXjSkb35JeBl79OoH7bsBWLbQbLel4FlwsY+6udcie5nEHCfyBskS/GAn313Eo6IJiEhw8IrRdaADdGmrSiqSGZElIPf6Lj1t/MvpKmtAA6QO7aMgMP4y3Vj4qx6QdOFHOSYYxxYZSzU5L5blP6JDDgxp5e7aSK5fzGC6TcTkzeNuSkNIJXUyX2rFnblBvLPEs5otLSm5VmVHfCA5pLAZp2dqbtBBf1tsMGreJmnt3cOabDKSosaY3fyyIqsQcBHPi7sVotbX2IBuimaADLt9QnCltKTRz0pr/XcuGUyx7EgACaEUaUsf2BbVT33JcmC84ogLt6Da24dQ1AD3U0JKc77XA1PcaGWRGNwtlIpkkiaAwdhHUX04ngmt6Jd9XYApqn8HjjQymA5GEUbFGSgvGiYgqVZevhERHUWKRhoymFd6pIKJliPJ4xwqb+4/nzCtBJTuUh8+mq6POMay8h3LDcrVAcBMvQQVadP6fkvOkQ0qYPjBzlhHh4ZOxn+fdmJpj5jHxxQphgGBZajx48KK+NXxrz1L9YOnQOuEH39+gcSzRWNNW/GuRc8YuDsF/bTq2zHjIxYcxonnkjLGL8CQWqwlp3UY/JN1e8Efxq66u/Piz+UFGPmgOtpCu/yeN8YlF8x6XU1DVfUDVjEgUgqC61sXGe0HoEkYTMS6eKZ2iVSZ9ilcrgOCx1QrbYtWTQdHxH6NTKC+xq9lHSjnF0xQ2/njfytqCstIELrWJzymX1RrjgUn8DSDlvyZvw/VmoNoZ6uKCiAamxH34OxUO+ji1EhcdW6C8n2z77sCiND++4ymDeJmsonidpT40zTjRXhsHTW95P9kmovJhWxlVAJJw3bp2ynrzY1LgV+w1ujKPOvmuYd6uTm7PbdBEytAMb90Udfdv4Jy+XOmZ0DXz7QEZdQp/ZcrjTpVwYY7T6YFfdwl32pjU96KxDAmkVw8uemkHiNbP6P/s7VCv2b3CXPeDIu32Oi2Ifnw1esDsCSunx0s1g86UkLAUbMkeE2KSdNjaI0RMw6bxGFXsb8nXrvVWbSp2/YFdO4JEVbD2jmn7blnYlIqZBrPQacDuF768lO7XzIlNlFlPLSvYLog40hcoi6NODV3vcewiNbAaUDuI/+hct5AyKy/0rJobWd1B4OYlT5+rbjlNdVp/PazPd1oGAAM3a9RTBmMUUJQVFu+U5KxErqVycSTimMIVEm5p7XXY8bLH8kxaZg+MjS/VweUjvQ9e0perB2LUGoNWpwnJuX+GoloswMIEsXnE5lVYzh/B/DsNksxmtvn0AsuxugJWHdhQS86mVMPR2CxX4uRWJWxdxwwluxRUn94qx+JE4/3FnxA2/RAVRsEnxro+y8dLH2zsDTJn7OOf/ZvbDu0//UE0yjZDQZFGF3rZWm5+JQ2WscHq/mLQje7++O2m3uZ+apZiA6BxKJ+jaaeJv1h0j5GuVHiRMRovwYFHsoMqTJfZLNquFUSaQF1C+/74uaeU1TiQQLHU1rCG4LKZxsk/FTOL2LHEPp7wXxAAAHTBRtLMyMAABhLMi1qMDo7GGg5o5HcUN9P4nvirVF+wr++UU197NOV0ysHVPVFbAWkG4XqZDlt45h1eIrq2LS3jAfgi6WxcWaZFrS6/YDhj+k0aCVSU2sUI1CMEvLhIHWyoCtY/iGonLwJa/6/LsRNxzkzg2D/LIcvSW39Aq7CFqR9Om7Sy6G3c7FB7IfS1STgt47DAWUmsugMgQf4yMt8J0ob9gCYeGCjv0QJlW/4DaQDxkGbaHO5G2+PWSp5ee073pMeCIm5sTkJuuwYoOK6XDMwbEsT0aA+PlLyhLwU9u0cLdrPzlOuKEut2cgYc0HzDvvGO2eRgEINrTRAJ/3iqR9G2L2tfgAAAKYeugAAAAAgBRyqtXbaJ71a/bO+Km6bfvkQ+6d+gDYVkkkDyKbsJS+Ywyha86O4nOmhd0ugS9sR9GheNMhmCwvoN7WiijqMjZDlXTVNCVY7WHMMy8VoowrPpYRuzFV3V3hnVgpHcShm6G71bZ93Pg+NIstqsOy2bgs3eTgmxWvIJ2/Ya+CgL8C4gRBIZOErnge/VnkNzd8XaeBUu3xizMSN2YHT9lO+clJDe8Zodo+eRONVvBYX3ujV1ekUqvrM7iUmOJmSh5Hoju/LHk6W/GuwOLxVWoTfSIAA8f5Pe5SwxvqlLARhtzqIZcwAAAAA9lHqdc+rneLsRAYJ9ML+WCksxEG7LN+4Kned0Z47zJV6zFOd6+WOc44x6OdIqhousaRo12+0NLcPhhfyH3HK2CpN02pGAD9WYrxqClx3lPk0hOvSIpDrwIDahMgwyiIpna21Ph5Me2nwZsVPeQRCPIzCK2dJ0cfmZdFxSXd1zPaO0dSZfpw8eixOAQoP1xPQUdXsBL9MpE3cyr3AC4T9W1ZTilFhnsDbmXJam8iHV3JfOJg5B9ALFePoBV01SSZeXAiFTYDx//jXt8tlyBL3W3piQaOTpDRAgR3ZtFYbAFAFjddWvYWTYHV6A8MldYsbZQ5yKgnQx+zSBLrGc7fW4/aJ1TVx/XA3l3E9rxIvAdEFQ/A9uqaeNcpHF7Z5BpeCbNsGY9DFo9Ym0sbFjZNM1nC/zg3fqmSpLAG4+5tdYUy+5Z+oo7GpWEAadiB8QSkjNlJEM4H7edg20Ddb7POV8hIrfz18HuMkEjT68MDHsir72Pjk6hndgaZl2ia74JK33tkil6wrnsw95v4wJkCi/OpozTrJ1wW9880YcS24B5i//cHbwP+iRHPe2Ex9QfXzKAxoodkpQKXFCK3aKTWsJL0Rb0YgmmoNakU0KD8vxWNNnCSjR9ZYqNkf9ixPlWWHEEuJC+RutOqf4d3e7RqRGAQT/AbbgAzQTS5QbvkiXhI5qCvhlH1j8na9eU1cWhNUhRZPDrd/FVXd8Ma2lKUMSkcSIEoLh21m3Irswm9NSgANjDn4NWCOeXwPjBMg+xBaKXh3Apg8wXYiKQokxkgeEOXCXUjyFgGb1rUEnnzIIyeNEMcmx4C0evBKbbYodKXBIuRJpFdKejIqPYQmLa3ELFVAz8LxHILj50t176Csnu5h4rcWwDjO9ghlR1qh5dhaB9abdNIbzZVBv0nVLAvrNDizqo2IDOu/E4TWurqvhkYCpOgc4QusyRDF8l3ifn73kyVwSPrAyLjXUyPOQAAAAAAABh2AmJ9XbfH6nSIrCOSV/O6rQu5ZR7gi/0t3kotVN3GhF6UgmtYcfF+8n5TmdGZuCYqWP4LaZUzazOgOEzSXUuMbUwSUplhSppSDXRyUekNHnNoBANvigkWN/Y9rV0h0H5whD/uxZX0oQLMI6tCUVdHCl+vsfSzdrCmDZk529y6g7+6L30Ihjoh/39/jIMrpEkFSD+7D/+Vdad1ZDPPDHDX+g7s6d2aXIsS6PCQimOFjh8fa32Tzk7iSH27vEK8ytXwyQw65BT+9btwPrZ4PMcfwkO3PKjhuT2OqJX4cflsX4ickIsdOB2QzpPrg3I/4lehozlqiX7k4y7Cw4ImAAAAAAAFUEJBecClLVW2s2oVD22e+t/4xFZ9sO0oT+pHcgXZZW0O4vzy/OhR6pJjw0bXq9yObOwd45KFY5Pj99JMcvdzuMJQ8V8lNwZaprQFcBka8aiHtKSwx7W9rzuokFpT2x0cDK+dThTAjZIw6cLN0z2xvam3Gto6xArBMSMXDwQNwzHzxjUewBmI1Fb9w3sS0dkKoB/ORJemNwYquYb05zl1ekAJCXQE2lIM2nXJhooyhTMISnhEU6PfVtTJ95BUJOBv1aq1VZx+zHn64Sp2xqKnpxftoq5fVPW7MAq+ts0jBkYphsyq0592lLtIzDgOlxd6gdLi71A6XF3qDcK12gLCooSnn6LrG/yoDRmXjNB83+3q8O0ApaVRnakgbdbpK4tnAJdnAPpkpmuq8EmpH8gAGVc1/IXkq+1384Y4f6lnPoG+pFsFakkg0IXx6Mde1fg4maT5bNlnCdGCdB7zZruD3pU6OKi0xXpos/tj3BF8URQ2J5gQC6l1qS3PmmhTEZDRr5DaqKZnSGWTBNnlKH1aHCNqfgcaMoYdJFBCXA1UyGwvuH6TAi3Jl936DzwVZEk4lRT+t/5NPs4mzHoEF1s0LrSCY7o5tDbflNWWZ18u1DacAS9f9NOMb11vTjrxXTPPY8YKfLUGF/C/kUAstgtQycz5jt/KCRCBuPKnsL9IZeQe4Xwfx4p93zPeu1MW6l+5dIXv/o7y1Wd/Dfd9nRQqQViU8hNDyrstPcBFdYizrY0O60C8vzuuk2agfYd9W0i2nvbXbZmbqEmmzS33oygWl/mx+SMGN4N1WziRgrJHvGQWZIgTw5l4RtXRM8mL2MgVikLtWaUKTyltfTnPd6OOfxX1QfCKKeIFBIMBL1m1vHftR2V5wZx5SMuHI4GKwaRkFUoXM2KuqQ3Q9Jnb1EXK43RlyvNfSVK5l5p+GeFcZxGvj3r6HPOf8w47irIw8NsZv34BMrr5zIG9i8UGZYjyPkiUcpIfZgCQf6WE0B0dIaljdI2FanDVrYXZrQrEbVMSm5r4C6dnSAcrhUsWkHmCvAHyDJgh52U30M1uAHRD8LH8vDvZAA7FlbIX/+HHt5Ckn/SCgOxjo/8aaXPqBC/5U+WLNbzFpYYQxnKq9JeYu7BFODnhv7o0FRGuHmoJLiMECS8pv6Aq6Pe7C3X69Mo8eJIs45ujbrwnHf2o2/150Aw6U3IVftORNmc7Rkx4gMww8GRsR8ryajMNNQrgJawl6a3ajLVX9fpnT3Vgsn7m9lGC5HvB5LIhPzMyMwhHijyDI1yIofCPE5EYcIxWmZ2BKVW7xGq79rSrH7ljgTmBPWKuVFHrsMAz4uSDpZvVGKTFMdHkYcu9g4yZkQLJ0IoeSaC5iUSK/yYyDzlT0oFDtlccEOibN7a5GSVglMQPlTwmCBJeafeKTiInP9lx24RMvnPkbjD3iMtFDzfzxqJ/OOwU5zDlgjRZqoZhaivbfA6n3IHE2CIrhOkbI3uRs5BjSlTrAye/yXbbEhEOcCpupGfmjebjdbqEKTs0J+00UW3qA/sDyUCJeTGD29oVspaaBYDcsSYE6q0rZWmr29fdbRDNzmjGG4upTRV4inwR9Eq5x5r//UV2FIRy5s6RwUE6+lBGk7KFZcRQG+XWTKHRilwCDgiSMMPZtcojAlNgAAAAAVDSMpTlhOuEvfZsrKRwLeTMrX7/mG9VIyI1CH9UtIJOPO7sFiCmnZYVPxWcpnPfKZ3R/1A7/UFn8PyFy51LLQsXuFb82FXdFH88lddcNmB7/FkUnVBrKDfWl/3mNDsBO0PXihwjzaqljme4firbl0RUCujiKdqYGU03SpdWJH4L5FIRgFJaaQIlo5L6BE1kIJgAgQgz4ef08Ekw+RTUauxeoCxqelud5nUR2z1B8mG99UMyQGagAAAAAAAeMhSFD3pNb4uaGIMdhPSpxH/9gIn5ud2flZaZV4dAtA3i74IY5m0oC1B12DRibGXt4nc7ECOwuioy4LCXFeeyGW30j7yxT5dqckj8uPedqrv1pLJzggiaFKOPZbjMiRH7WnbKCsUy1iHZbEqUeauMGQQJ0uaMln2hPYvbBtWc8L8Tg+Reika6RBAlptCBmKVZ2dMZCoOaFQbncvV1a1hUysKj0V9OAttdYV21JL8C21JjGX8y/HMhAW77TXkbbTRhV3ro/68zEdgqNrIox0hEHjtJsW6N51+VSc8bayAjHbiJTnfFgIYEti/YYsT1qxG3A6xvlVR2CV7VHelBTGpL25DaiZ6nWW6KZW3H7wbAq2bNcUmsxpZlv1gwTRqypTcVYoYsXfI3rMcuX62OK3RAj+zQ9C+OjIv4M+ZsNAc2MG1H+rJuNSuUQ5X4pLJl6mjFSOtIg1f+g4KKYcG3ILe5RUoWosnYXtKgtYLabdSsFJIW1CrFt6CzqqVOkmPLRL0hojVUfB5MICgRQfnAyJcqA0T0EqwysFMo+C7uLFl0suhpWoeyQVY9yESN8cdl6FIPieqfZcfEzemkkiQAAAAAAAAAAAAAAAAACRuoHwtmUHJ0q9w4VDDzgpFyU0yi8TLUZJicvdv4pVAJigz10u3EFbkSlnlG/PBfyeBjYzOpJnU2Aj0TvZDXE0MT3TrAxUaLJwYdfoc4gxRKXdjpbOsC+UWHczLjpA9bPOnQoSBUxboJ/57CW39KKxRlMRlt+ZbtoVxBf85f9u0PA+1QggK2TlZWe1j00V2CRR8NKTKXVGcYaYetGQyDfoCd/T+LT4xaSlbs9B8xJxHK0wJ1/+7qrxX5JNgr1yhnSf5q9uGO0TWo75w4MDDud4tKITo8plhGAF6YMPCY67iV4azyd1Olhk7YXgWOslfxvwAAA';
+const PASTEL={'3601':[255,214,178],'3602':[190,232,204],'3603':[200,214,250],'3604':[250,200,218],'3605':[214,238,176],'3606':[228,204,248],'3607':[255,234,168],'3608':[190,228,246],'3609':[204,228,190],'3610':[182,228,232],'3611':[255,210,188],'3612':[214,208,250],'3613':[200,238,210],'3614':[248,222,190],'3615':[252,196,206],'3616':[248,214,236]};
+function staticLayers(){
+  if(STATIC) return STATIC;
+  const sel=S.selected, tot=AGG.tot;
+  const maxT=Math.max(1,...HOSP.map(h=>tot[h.id].sent+tot[h.id].recv));
+  const involves=g=>!sel||g.from===sel||g.to===sel;
+  const byDist=Object.fromEntries(HOSP.filter(h=>h.role!=='office').map(h=>[h.dist,h.id]));
+  const halo=HOSP.filter(visible).map(h=>{const t=tot[h.id].sent+tot[h.id].recv,base=h.role==='center'?150:h.role==='general'?115:h.role==='office'?60:90;return{h,t,r:base*SCALE*(.8+Math.sqrt(t/maxT)*.7)}});
+  STATIC=[
+    ...(S.terrain&&terrImg.complete&&terrImg.naturalWidth?[new deck.BitmapLayer({id:'terrain',image:terrImg,bounds:TERRAIN_BOUNDS,_imageCoordinateSystem:deck.COORDINATE_SYSTEM.LNGLAT,parameters:{depthTest:false}})]:[]),
+    S.terrain
+    ? new deck.GeoJsonLayer({id:'dist',data:DISTRICTS,filled:true,stroked:true,
+        getFillColor:f=>{const id=byDist[f.properties.name];return sel&&id!==sel?[244,247,250,120]:[255,255,255,1]},
+        getLineColor:[255,255,255,215],lineWidthMinPixels:1.4,pickable:true,autoHighlight:true,highlightColor:[255,255,255,50],
+        parameters:{depthTest:false},updateTriggers:{getFillColor:[sel]}})
+    : new deck.GeoJsonLayer({id:'dist',data:DISTRICTS,extruded:true,wireframe:true,getElevation:0,
+      getFillColor:f=>{const c=PASTEL[f.properties.code]||[230,236,242];const id=byDist[f.properties.name];if(sel&&id!==sel)return[...c.map(v=>Math.round(v*.45+238*.55)),255];return[...c,255]},
+      getLineColor:[132,150,170,255],lineWidthMinPixels:1,pickable:true,autoHighlight:true,highlightColor:[255,255,255,22],
+      material:{ambient:.6,diffuse:.5,shininess:8},updateTriggers:{getFillColor:[AGG,sel]}}),
+    new deck.ScatterplotLayer({id:'halo',data:halo,getPosition:d=>[d.h.pos[0],d.h.pos[1],1],getRadius:d=>d.r,stroked:true,filled:true,
+      getFillColor:d=>isHub(d.h)?[214,150,24,sel&&d.h.id!==sel?12:38]:[47,111,176,sel&&d.h.id!==sel?10:28],
+      getLineColor:d=>isHub(d.h)?[180,122,12,200]:[47,111,176,160],lineWidthMinPixels:1.2,parameters:{depthTest:false}}),
+    new deck.PathLayer({id:'arcs',data:AGG.groups,getPath:gPath,widthUnits:'pixels',getWidth:d=>1.4+Math.sqrt(d.count)*1.2,
+      getColor:d=>rgba(SPEC_BY[d.spec].c,involves(d)?225:30),capRounded:true,jointRounded:true,pickable:true,autoHighlight:true,highlightColor:[255,255,255,200],updateTriggers:{getPath:ZQ,getColor:[sel]}}),
+    new deck.SolidPolygonLayer({id:'bld',data:partPolys(),extruded:true,getPolygon:d=>d.poly,getElevation:d=>d.ht,pickable:true,autoHighlight:true,highlightColor:[255,255,255,60],
+      getFillColor:d=>rgba(MAT[d.m],sel&&d.h.id!==sel?120:255),
+      material:{ambient:.72,diffuse:.45,shininess:32,specularColor:[60,70,80]}})
+  ];
+  return STATIC;
+}
+function dynLayers(t){
+  const pts=[], sel=S.selected;
+  for(const p of AGG.moving){
+    if(sel&&p.c.from!==sel&&p.c.to!==sel) continue;
+    const path=gPath(p.g), f=reduceMotion?.5:((t/5200)+p.phase)%1, col=SPEC_BY[p.c.spec].c;
+    pts.push({p:along(path,f),r:4,c:rgba(col,255),s:1});
+    if(!reduceMotion){pts.push({p:along(path,Math.max(0,f-.025)),r:2.8,c:rgba(col,200)});pts.push({p:along(path,Math.max(0,f-.05)),r:2,c:rgba(col,120)})}
+  }
+  const now=performance.now(); newPulses=newPulses.filter(x=>now-x.t<2600);
+  const rings=newPulses.map(x=>{const q=(now-x.t)/2600;return{p:[...H[x.id].pos,2],r:(isHub(H[x.id])?175:115)*SCALE*(1+q*1.6),a:Math.round(220*(1-q)),c:x.c}});
+  return[
+    new deck.ScatterplotLayer({id:'pend',data:pts,getPosition:d=>d.p,getRadius:d=>d.r,radiusUnits:'pixels',getFillColor:d=>d.c,stroked:true,getLineColor:d=>d.s?[255,255,255,255]:[0,0,0,0],lineWidthUnits:'pixels',getLineWidth:1.5,parameters:{depthTest:false}}),
+    new deck.ScatterplotLayer({id:'pulse',data:rings,getPosition:d=>d.p,getRadius:d=>d.r,stroked:true,filled:false,getLineColor:d=>rgba(d.c,d.a),lineWidthMinPixels:2,parameters:{depthTest:false}})
+  ];
+}
+
+const isNarrow=()=>window.innerWidth<760;
+function homeView(){return{longitude:101.88,latitude:isNarrow()?16.03:16.0,zoom:isNarrow()?7.95:8.8,pitch:S.mode3d?52:0,bearing:S.mode3d?-14:0,transitionDuration:900,transitionInterpolator:new deck.FlyToInterpolator()}}
+let viewState=homeView(), VIEWK=0;
+setZoom(viewState.zoom);
+const setView=v=>{viewState=v;deckgl.setProps({initialViewState:{...v,_k:++VIEWK}})};
+
+const esc=s=>String(s).replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+function roleText(h){return h.role==='office'?'สำนักงานสาธารณสุขจังหวัด':`${SIZE_LABEL[h.role]} · ${isHub(h)?'แม่ข่าย':'ลูกข่าย'}`}
+function tip({object,layer}){
+  if(!object) return null;
+  const st='background:#ffffff;color:#18283a;border:1px solid #d8e1ea;box-shadow:0 4px 14px rgba(24,40,58,.15);border-radius:8px;padding:8px 10px;font-size:12.5px;max-width:280px;font-family:"IBM Plex Sans Thai",sans-serif';
+  if(layer.id==='arcs'){const s=SPEC_BY[object.spec];return{html:`<b>${esc(H[object.from].name)} → ${esc(H[object.to].name)}</b><br><span style="color:rgb(${s.c})">■</span> ${s.name}<br>${object.count} รายการ · ยังดำเนินการ ${object.open}`,style:{cssText:st}}}
+  if(layer.id==='bld'){const h=object.h,t=AGG.tot[h.id];return{html:`<b>${esc(h.name)}</b><br>${esc(roleText(h))}<br>ส่ง ${t.sent} · รับ ${t.recv} · ยังดำเนินการ ${t.open}<br><span style="color:#566b81">คลิกเพื่อดูรายละเอียด</span>`,style:{cssText:st}}}
+  if(layer.id==='dist'){return{html:`อำเภอ${object.properties.name}`,style:{cssText:st}}}
+  return null;
+}
+
+const deckgl=new deck.Deck({
+  parent:document.getElementById('map'),
+  initialViewState:viewState,controller:{dragRotate:true,touchRotate:true},
+  onViewStateChange:({viewState:v})=>{viewState=v;if(setZoom(v.zoom)&&reduceMotion)frame(0)},
+  getTooltip:tip,
+  onClick:({object,layer})=>{
+    if(!object){select(null);return}
+    if(layer.id==='bld') select(object.h.id);
+    else if(layer.id==='dist'){const h=HOSP.find(h=>h.role!=='office'&&h.dist===object.properties.name);if(h)select(h.id)}
+    else if(layer.id==='arcs') select(object.from);
+  },
+  onAfterRender:placeLabels,
+  layers:[]
+});
+
+/* ---------- HTML labels (crisp Thai text) ---------- */
+const labelsEl=document.getElementById('labels');
+const lblEls=HOSP.map(h=>{const d=document.createElement('div');d.onclick=()=>select(h.id);labelsEl.appendChild(d);return d});
+function relabel(){HOSP.forEach((h,i)=>{lblEls[i].className='lbl'+(isHub(h)?' hub':'')+(h.role==='office'?' office':'')})}
+function labelText(){
+  HOSP.forEach((h,i)=>{const t=AGG.tot[h.id];
+    const nums=(t.sent?`<span class="cnt" title="ส่งออก">↑${t.sent}</span>`:'')+(t.recv?`<span class="cnt in" title="รับเข้า">↓${t.recv}</span>`:'')||'<span class="cnt">0</span>';
+    lblEls[i].hidden=!visible(h);
+    lblEls[i].innerHTML=`${esc(h.role==='center'?h.name:h.short)}${isHub(h)?'<span class="node">Node</span>':''}${nums}${t.open?`<span class="pd">${t.open}</span>`:''}`;
+    lblEls[i].title=`${h.name} · ${roleText(h)}\n↑ ส่งปรึกษาออก ${t.sent} รายการ\n↓ รับปรึกษาเข้า ${t.recv} รายการ\nตัวเลขสีแดง: ยังดำเนินการอยู่ ${t.open} รายการ\n(คลิกเพื่อดูรายละเอียด)`})
+}
+function placeLabels(){
+  const vp=deckgl.getViewports&&deckgl.getViewports()[0]; if(!vp) return;
+  HOSP.forEach((h,i)=>{ if(!visible(h)) return;
+    const d=(h.role==='center'?150:h.role==='general'?110:h.role==='office'?50:84)/2*SCALE;
+    const kx=1/(111320*Math.cos(h.pos[1]*Math.PI/180)), ky=1/110540;
+    const [x,y]=vp.project([h.pos[0]+d*Math.sin(h.rot)*kx,h.pos[1]-d*Math.cos(h.rot)*ky,0]);
+    const el=lblEls[i]; el.style.left=x+'px'; el.style.top=y+'px';
+    el.classList.toggle('sel',S.selected===h.id);
+    el.style.opacity=S.selected&&S.selected!==h.id&&!isHub(h)?'.45':'1';
+  });
+}
+
+function frame(t){deckgl.setProps({layers:[...staticLayers(),...dynLayers(t||0)]})}
+function loop(t){frame(t);requestAnimationFrame(loop)}
+
+/* ---------- sidebar ---------- */
+const $=id=>document.getElementById(id);
+const fmt=n=>n.toLocaleString('th-TH');
+function seg(el,opts,key){
+  el.innerHTML=''; for(const [v,l] of opts){const b=document.createElement('button');b.textContent=l;b.setAttribute('aria-pressed',String(S[key]===v));b.onclick=()=>{S[key]=v;update()};el.appendChild(b)}
+}
+function median(a){if(!a.length)return null;a=[...a].sort((x,y)=>x-y);const m=a.length>>1;return a.length%2?a[m]:(a[m-1]+a[m])/2}
+function dur(h){if(h==null)return'–';return h<48?(h<10?h.toFixed(1):Math.round(h))+' ชม.':(h/24<10?(h/24).toFixed(1):Math.round(h/24))+' วัน'}
+const uniq=a=>new Set(a).size;
+function renderRail(){
+  const L=AGG.list;
+  const cases=uniq(L.map(c=>c.caseId));
+  $('kTotal').textContent=fmt(cases);
+  $('kOpen').textContent=fmt(uniq(L.filter(c=>BUCKET[c.bucket].open).map(c=>c.caseId)));
+  const closedSpans=L.filter(c=>!BUCKET[c.bucket].open&&!BUCKET[c.bucket].cancel&&c.last).map(c=>(c.last-c.created)/HR);
+  $('kMed').textContent=dur(median(closedSpans));
+  const ref=uniq(L.filter(c=>c.wf==='refer'||c.wf==='shared_care').map(c=>c.caseId));
+  $('kRef').textContent=cases?Math.round(ref/cases*100)+'%':'–';
+
+  seg($('fRange'),RANGES,'range');
+  const dests=[...new Set(S.cases.map(c=>c.to))].filter(id=>H[id]).sort((a,b)=>(H[a].role==='center'?0:1)-(H[b].role==='center'?0:1));
+  if(S.hub!=='all'&&!dests.includes(S.hub)) S.hub='all';
+  seg($('fHub'),[['all','ทุกแห่ง'],...dests.map(id=>[id,H[id].short])],'hub');
+  const wfs=[...new Set(S.cases.map(c=>c.wf))].filter(Boolean);
+  seg($('fWf'),[['all','ทั้งหมด'],...wfs.map(w=>[w,WF[w]||w])],'wf');
+
+  // status list (single select), counts ignore the status filter itself
+  const sb=filtered('status'), sc={}; let openN=0;
+  for(const c of sb){sc[c.bucket]=(sc[c.bucket]||0)+1; if(BUCKET[c.bucket].open) openN++}
+  const keys=Object.keys(sc).sort((a,b)=>BUCKET[a].ord-BUCKET[b].ord);
+  const fs0=$('fStatus'); fs0.innerHTML='';
+  const addSt=(key,label,col,n)=>{const b=document.createElement('button');b.className='spec st';b.setAttribute('aria-pressed',String(S.status===key));
+    b.innerHTML=`<span class="sw${col?'':' ring'}" style="${col?`background:rgb(${col})`:''}"></span><span>${esc(label)}</span><span class="n">${fmt(n)}</span>`;
+    b.onclick=()=>{S.status=S.status===key?'all':key;update()};fs0.appendChild(b)};
+  addSt('open','ยังดำเนินการอยู่ (ทุกสถานะที่ยังไม่จบ)',null,openN);
+  for(const k of keys) addSt(k,BUCKET[k].label,BUCKET[k].c,sc[k]);
+  $('stAll').hidden=S.status==='all';
+
+  const base=filtered('spec'), cnt={}; for(const c of base) cnt[c.spec]=(cnt[c.spec]||0)+1;
+  const fs=$('fSpec'); fs.innerHTML='';
+  for(const s of SPEC){ if(!cnt[s.id]&&s.w===0) continue;
+    const b=document.createElement('button');b.className='spec';b.setAttribute('aria-pressed',String(S.specs.has(s.id)));
+    b.innerHTML=`<span class="sw" style="background:rgb(${s.c})"></span><span>${s.name}</span><span class="n">${fmt(cnt[s.id]||0)}</span>`;
+    b.onclick=()=>{S.specs.has(s.id)?S.specs.delete(s.id):S.specs.add(s.id);update()};fs.appendChild(b)}
+
+  const rk=$('rank'); rk.innerHTML='';
+  const src=HOSP.filter(h=>AGG.tot[h.id].sent>0).sort((a,b)=>AGG.tot[b.id].sent-AGG.tot[a.id].sent).slice(0,8);
+  const mx=Math.max(1,...src.map(h=>AGG.tot[h.id].sent));
+  for(const h of src){
+    const by={}; for(const c of AGG.list) if(c.from===h.id) by[c.spec]=(by[c.spec]||0)+1;
+    const t=AGG.tot[h.id], segs=SPEC.filter(s=>by[s.id]).map(s=>`<i style="width:${by[s.id]/mx*100}%;background:rgb(${s.c})"></i>`).join('');
+    const openSent=AGG.list.filter(c=>c.from===h.id&&BUCKET[c.bucket].open).length;
+    const b=document.createElement('button');b.className='rk';
+    b.innerHTML=`<span class="nm">${esc(h.name)}</span><span class="ct">${fmt(t.sent)}${openSent?` · <span class="pend">ดำเนินการ ${openSent}</span>`:''}</span><span class="bar">${segs}</span>`;
+    b.onclick=()=>select(h.id);rk.appendChild(b)}
+  if(!src.length) rk.innerHTML='<p style="margin:0;color:var(--muted);font-size:13px">ไม่มี case ในตัวกรองนี้</p>';
+
+  const rki=$('rankIn'); rki.innerHTML='';
+  const dst=HOSP.filter(h=>AGG.tot[h.id].recv>0).sort((a,b)=>AGG.tot[b.id].recv-AGG.tot[a.id].recv).slice(0,8);
+  const mxi=Math.max(1,...dst.map(h=>AGG.tot[h.id].recv));
+  for(const h of dst){
+    const by={}; for(const c of AGG.list) if(c.to===h.id) by[c.spec]=(by[c.spec]||0)+1;
+    const segs=SPEC.filter(s=>by[s.id]).map(s=>`<i style="width:${by[s.id]/mxi*100}%;background:rgb(${s.c})"></i>`).join('');
+    const b=document.createElement('button');b.className='rk';
+    b.innerHTML=`<span class="nm">${esc(h.name)}${isHub(h)?'':' <span class="nh">ไม่ใช่แม่ข่าย</span>'}</span><span class="ct">${fmt(AGG.tot[h.id].recv)}</span><span class="bar">${segs}</span>`;
+    b.onclick=()=>select(h.id);rki.appendChild(b)}
+  if(!dst.length) rki.innerHTML='<p style="margin:0;color:var(--muted);font-size:13px">ไม่มี case ในตัวกรองนี้</p>';
+
+  const has=S.source==='file';
+  $('srcText').textContent=has?`${S.fileName} · ${fmt(uniq(S.cases.map(c=>c.caseId)))} case`:'ยังไม่มีข้อมูล';
+  $('srcChip').classList.toggle('file',has); $('btnClear').hidden=!has; $('emptyState').hidden=has;
+  $('snapNote').hidden=!has||!S.snapshot;
+  if(S.snapshot) $('snapNote').textContent='ข้อมูล ณ '+new Date(S.snapshot).toLocaleString('th-TH',{dateStyle:'medium',timeStyle:'short'});
+}
+function stackBar(counts){
+  const tot=Object.values(counts).reduce((a,b)=>a+b,0)||1;
+  const keys=Object.keys(counts).sort((a,b)=>BUCKET[a].ord-BUCKET[b].ord);
+  return `<div class="stk">${keys.map(k=>`<i style="width:${counts[k]/tot*100}%;background:rgb(${BUCKET[k].c})"></i>`).join('')}</div>
+    <div class="stl">${keys.map(k=>`<span><i style="background:rgb(${BUCKET[k].c})"></i>${esc(BUCKET[k].label)} <b>${counts[k]}</b></span>`).join('')}</div>`;
+}
+function renderDetail(){
+  const el=$('detail'), id=S.selected; if(!id){el.hidden=true;return}
+  const h=H[id], t=AGG.tot[id], hub=isHub(h);
+  const mx=Math.max(1,...Object.values(t.bySpec));
+  const bars=SPEC.filter(s=>t.bySpec[s.id]).map(s=>`<div class="sbar"><span>${s.short}</span><span class="t"><i style="width:${t.bySpec[s.id]/mx*100}%;background:rgb(${s.c})"></i></span><span class="v">${t.bySpec[s.id]}</span></div>`).join('')||'<span style="color:var(--muted);font-size:12px">ไม่มี case ในตัวกรองนี้</span>';
+  let partners='';
+  if(t.recv){const m={};for(const c of AGG.list) if(c.to===id) m[c.from]=(m[c.from]||0)+1;
+    const top=Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,6);
+    partners=`<div><h2>ต้นทางที่ส่งมา</h2><div class="wl">${top.map(([f,n])=>`<div><i style="background:var(--spoke)"></i><span>${esc(H[f].name)}</span><span style="font-family:var(--f-data)">${n}</span></div>`).join('')}</div></div>`}
+  const now=refTime();
+  const opens=AGG.list.filter(c=>BUCKET[c.bucket].open&&(c.from===id||c.to===id)).sort((a,b)=>a.created-b.created).slice(0,6);
+  const wl=opens.length?`<div><h2>ยังดำเนินการอยู่ เรียงจากเปิดนานที่สุด</h2><div class="wl">${opens.map(c=>`<div><i style="background:rgb(${BUCKET[c.bucket].c})"></i><span>${SPEC_BY[c.spec].short} · <span style="font-family:var(--f-data);font-size:11px">${esc(c.caseId)}</span><br><span style="color:var(--muted)">${esc(H[c.from].short)} → ${esc(H[c.to].short)} · ${esc(BUCKET[c.bucket].label)}</span></span><span class="pend" style="font-family:var(--f-data)">${dur((now-c.created)/HR)}</span></div>`).join('')}</div></div>`:'';
+  el.innerHTML=`<button class="x" aria-label="ปิด" id="dClose">×</button>
+    <div><h3>${esc(h.name)}</h3><div class="rolerow"><span class="role ${hub?'hub':''}">${esc(roleText(h))}</span><span>อำเภอ${esc(h.dist)}</span></div></div>
+    <div class="dstat"><div><b>${fmt(t.sent)}</b><span>ส่งออก</span></div><div><b>${fmt(t.recv)}</b><span>รับเข้า</span></div><div><b class="pend">${fmt(t.open)}</b><span>ยังดำเนินการ</span></div></div>
+    <div><h2>สถานะ</h2>${Object.keys(t.byStatus).length?stackBar(t.byStatus):'<span style="color:var(--muted);font-size:12px">–</span>'}</div>
+    <div><h2>แยกตามสาขา</h2><div style="display:flex;flex-direction:column;gap:5px">${bars}</div></div>${partners}${wl}`;
+  el.hidden=false; $('dClose').onclick=()=>select(null);
+}
+function select(id){
+  S.selected=id; STATIC=null; renderDetail();
+  if(id){const h=H[id];const z=isNarrow()?12.8:13.3, off=isNarrow()?0:80*156543/Math.pow(2,z)/111320;setView({...viewState,longitude:h.pos[0]+off,latitude:h.pos[1],zoom:z,transitionDuration:900,transitionInterpolator:new deck.FlyToInterpolator()})}
+  if(reduceMotion) frame(0);
+}
+function update(){aggregate();labelText();renderRail();renderDetail();if(reduceMotion)frame(0)}
+
+/* ---------- controls ---------- */
+$('btn3d').onclick=()=>{S.mode3d=!S.mode3d;$('btn3d').setAttribute('aria-pressed',String(S.mode3d));$('btn3d').textContent=S.mode3d?'มุม 3 มิติ':'มุมบน';setView({...viewState,pitch:S.mode3d?52:0,bearing:S.mode3d?-14:0,transitionDuration:700,transitionInterpolator:new deck.FlyToInterpolator()})};
+$('btnReset').onclick=()=>{select(null);setView(homeView())};
+$('specAll').onclick=()=>{S.specs=new Set(SPEC.map(s=>s.id));update()};
+$('btnTerrain').onclick=()=>{S.terrain=!S.terrain;$('btnTerrain').setAttribute('aria-pressed',String(S.terrain));$('elevKey').hidden=!S.terrain;STATIC=null;if(reduceMotion)frame(0)};
+$('stAll').onclick=()=>{S.status='all';update()};
+
+let liveTimer=null, toastTimer=null;
+function toast(msg,ms){const t=$('toast');t.textContent=msg;t.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.hidden=true,ms||3400)}
+
+
+/* ---------- CSV import ---------- */
+function parseCSV(text){
+  const rows=[];let row=[],f='',q=false;
+  text=text.replace(/^﻿/,'');
+  for(let i=0;i<text.length;i++){const ch=text[i];
+    if(q){if(ch==='"'){if(text[i+1]==='"'){f+='"';i++}else q=false}else f+=ch}
+    else if(ch==='"')q=true; else if(ch===','){row.push(f);f=''} else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&text[i+1]==='\n')i++;row.push(f);f='';if(row.some(x=>x.trim()!==''))rows.push(row);row=[]} else f+=ch}
+  row.push(f); if(row.some(x=>x.trim()!=='')) rows.push(row); return rows;
+}
+const norm=s=>String(s||'').replace(/โรงพยาบาล|รพ[ศทช]?\.?|เฉลิมพระเกียรติ|อำเภอ|อ\.|\s/g,'').toLowerCase();
+function matchHosp(v){const n=norm(v);if(!n)return null;if(H[n])return n;
+  {const hc=String(v).trim().replace(/^0+/,'');const byCode=HOSP.find(h=>h.hcode&&h.hcode===hc);if(byCode)return byCode.id}
+  if(/สสจ|สาธารณสุขจังหวัด/.test(n))return'PHO';
+  for(const h of HOSP){if(h.role==='office')continue;if(norm(h.name)===n||norm(h.dist)===n||norm(h.short)===n)return h.id}
+  if(n==='เมืองชัยภูมิ'||n==='เมือง')return'3601'; return null}
+function matchSpec(v){const s=String(v||'').toLowerCase();
+  if(/ศัลย|maxillo|surg|oms/.test(s))return'oms'; if(/จัดฟัน|ortho/.test(s))return'ortho'; if(/ปริทันต|perio/.test(s))return'perio';
+  if(/รากฟัน|เอ็นโด|คลองราก|endo/.test(s))return'endo'; if(/เด็ก|pedo|pediat|paedi/.test(s))return'pedo'; if(/ประดิษฐ์|prosth/.test(s))return'prosth';
+  if(/วินิจฉัย|เวชศาสตร์|oral\s*med|omed|diagn/.test(s))return'omed'; if(/ทั่วไปขั้นสูง|super\s*gp|sgp/.test(s))return'sgp'; return'other'}
+function parseDate(v){const s=String(v||'').trim();if(!s)return null;
+  if(/T\d{2}:\d{2}.*(Z|[+-]\d{2}:?\d{2})$/.test(s)){const t=Date.parse(s);return isNaN(t)?null:t}
+  let m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:[ T](\d{1,2}):(\d{2}))?/);
+  if(!m){const m2=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2}))?/);if(m2)m=[0,m2[3],m2[2],m2[1],m2[4],m2[5]]}
+  if(!m){const t=Date.parse(s);return isNaN(t)?null:t}
+  let y=+m[1]; if(y>2400)y-=543; return new Date(y,+m[2]-1,+m[3],+(m[4]||0),+(m[5]||0)).getTime()}
+function roleFromLevel(l){l=String(l||'');if(/รพศ|รพท/.test(l))return'center';if(/node/i.test(l))return'node';if(/สสจ/.test(l))return'office';if(/รพช|รพ\.?สต/.test(l))return'spoke';return null}
+
+const STORE_KEY='cpm-dental-twin-last-csv';
+function importCSV(text,name,quiet){
+  const rows=parseCSV(text); if(rows.length<2){toast('ไฟล์ไม่มีข้อมูล ตรวจว่าแถวแรกเป็นชื่อคอลัมน์');return}
+  const hd=rows[0].map(h=>h.trim().toLowerCase()), ix=k=>hd.indexOf(k), col=(r,k)=>ix(k)>=0?(r[ix(k)]||'').trim():'';
+  const cph=ix('origin_hospital_name')>=0&&ix('destination_hospital_name')>=0;
+  const out=[], unmatched=new Set(), roles={}, levels={}; let bad=0, snap=0;
+  if(cph){
+    rows.slice(1).forEach((r,i)=>{
+      const fromName=col(r,'origin_hospital_name'), toName=col(r,'destination_hospital_name');
+      const from=matchHosp(fromName), to=matchHosp(toName), created=parseDate(col(r,'sent_at'));
+      if(!from) unmatched.add(fromName); if(!to) unmatched.add(toName);
+      if(!from||!to||!created||from===to){bad++;return}
+      for(const [id,lv] of [[from,col(r,'origin_hospital_level')],[to,col(r,'destination_hospital_level')]]){const ro=roleFromLevel(lv);if(ro){roles[id]=ro;levels[id]=lv}}
+      const bucket=bucketOf(col(r,'status_bucket')||col(r,'workflow_status')||col(r,'case_status'),col(r,'status_label_th'));
+      const s=parseDate(col(r,'snapshot_at')); if(s&&s>snap) snap=s;
+      out.push({id:'R'+i,caseId:col(r,'case_id')||('R'+i),from,to,spec:matchSpec(col(r,'specialty')),specRaw:col(r,'specialty'),bucket,wf:col(r,'workflow_type')||'consult',created,last:parseDate(col(r,'last_activity_at'))});
+    });
+  } else {
+    const need=['from_hosp','to_hosp','specialty','created_at'].filter(k=>ix(k)<0);
+    if(need.length){toast('ไม่พบคอลัมน์ '+need.join(', ')+' ดูรูปแบบไฟล์');return}
+    rows.slice(1).forEach((r,i)=>{
+      const from=matchHosp(col(r,'from_hosp')),to=matchHosp(col(r,'to_hosp')),created=parseDate(col(r,'created_at'));
+      if(!from) unmatched.add(col(r,'from_hosp')); if(!to) unmatched.add(col(r,'to_hosp'));
+      if(!from||!to||!created||from===to){bad++;return}
+      const responded=parseDate(col(r,'responded_at')), st=col(r,'status').toLowerCase();
+      const bucket=/รอ|pend|wait/.test(st)?'pending':/ส่งต่อ|refer/.test(st)?'treatment':(responded||/ตอบ|answer|done|เสร็จ/.test(st))?'closed':'pending';
+      out.push({id:'R'+i,caseId:col(r,'consult_id')||('R'+i),from,to,spec:matchSpec(col(r,'specialty')),specRaw:col(r,'specialty'),bucket,wf:/ส่งต่อ|refer/.test(st)?'refer':'consult',created,last:responded||created});
+    });
+  }
+  if(!out.length){toast('จับคู่โรงพยาบาลไม่ได้เลย ตรวจชื่อโรงพยาบาลในไฟล์',6000);return}
+  for(const h of HOSP){h.level=levels[h.id]||''}
+  rebuildModels();
+  S.cases=out;S.source='file';S.fileName=name;S.snapshot=snap||null;S.range='all';S.status='all';S.wf='all';S.hub='all';S.selected=null;
+  S.specs=new Set(SPEC.map(s=>s.id));
+  update();
+  if(!quiet){try{localStorage.setItem(STORE_KEY,JSON.stringify({name,text}))}catch(e){}}
+  const um=[...unmatched].filter(Boolean);
+  if(!quiet||um.length)toast(`นำเข้า ${fmt(uniq(out.map(c=>c.caseId)))} case (${fmt(out.length)} แถว)`+(bad?` · ข้าม ${fmt(bad)} แถว`:'')+(um.length?` · จับคู่ไม่ได้: ${um.slice(0,3).join(', ')}`:''),um.length?8000:4000);
+}
+$('btnImport').onclick=()=>$('fileIn').click();
+$('fileIn').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>importCSV(String(rd.result),f.name);rd.readAsText(f,'utf-8');e.target.value=''};
+$('btnImport2').onclick=()=>$('fileIn').click();
+$('btnClear').onclick=()=>{try{localStorage.removeItem(STORE_KEY)}catch(e){}for(const h of HOSP){h.level=''}S.cases=[];S.source='none';S.fileName='';S.snapshot=null;S.range='all';S.status='all';S.wf='all';S.hub='all';S.selected=null;update();toast('ล้างข้อมูลออกจากเครื่องนี้แล้ว')};
+$('btnSchema').onclick=()=>{$('modal').hidden=false};
+$('btnClose').onclick=()=>{$('modal').hidden=true};
+$('modal').onclick=e=>{if(e.target.id==='modal')$('modal').hidden=true};
+$('btnCopy').onclick=()=>{const t=$('tpl').textContent;navigator.clipboard.writeText(t).then(()=>{$('btnCopy').textContent='คัดลอกแล้ว'},()=>{const r=document.createRange();r.selectNodeContents($('tpl'));const s=getSelection();s.removeAllRanges();s.addRange(r)})};
+
+/* ---------- boot ---------- */
+rebuildModels();
+S.range='all';
+update();
+try{const saved=JSON.parse(localStorage.getItem(STORE_KEY)||'null');if(saved&&saved.text)importCSV(saved.text,saved.name,true)}catch(e){}
+if(reduceMotion) frame(0); else requestAnimationFrame(loop);
+window.addEventListener('resize',()=>placeLabels());
+})();
+</script>
+
+</body>
+</html>
